@@ -9,6 +9,7 @@ const _lightColor = AppColors(
   color4: Colors.black,
   color5: Color(0xFFBEBDBD),
   color6: Color(0xFFE8E6E6),
+  color7: Colors.black54,
 );
 const _darkColor = AppColors(
   color1: Color(0xFF252525),
@@ -17,6 +18,7 @@ const _darkColor = AppColors(
   color4: Colors.white,
   color5: Color(0xFF111111),
   color6: Color(0xFF1d1d1d),
+  color7: Color(0xFF808080),
 );
 
 ThemeData getAppTheme(BuildContext context, bool isDarkTheme) {
@@ -64,12 +66,12 @@ ThemeData getAppTheme(BuildContext context, bool isDarkTheme) {
       ),
     ),
     listTileTheme: ListTileThemeData(
-        iconColor: isDarkTheme ? Colors.orange : Colors.purple),
+        tileColor: isDarkTheme ? _darkColor.color1 : _lightColor.color1),
     appBarTheme: AppBarTheme(
       backgroundColor: isDarkTheme ? _darkColor.color1 : _lightColor.color1,
       foregroundColor: isDarkTheme ? _darkColor.color2 : _lightColor.color2,
       iconTheme: IconThemeData(
-          color: isDarkTheme ? const Color(0xFF808080) : Colors.black54),
+          color: isDarkTheme ? _darkColor.color7 : _lightColor.color7),
       titleTextStyle: const TextStyle(fontSize: 12),
     ),
   );
@@ -83,6 +85,7 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color? color4;
   final Color? color5;
   final Color? color6;
+  final Color? color7;
 
   const AppColors({
     required this.color1,
@@ -91,6 +94,7 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.color4,
     required this.color5,
     required this.color6,
+    required this.color7,
   });
 
   @override
@@ -101,6 +105,7 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? color4,
     Color? color5,
     Color? color6,
+    Color? color7,
   }) {
     return AppColors(
       color1: color1 ?? this.color1,
@@ -109,6 +114,7 @@ class AppColors extends ThemeExtension<AppColors> {
       color4: color4 ?? this.color4,
       color5: color5 ?? this.color5,
       color6: color6 ?? this.color6,
+      color7: color7 ?? this.color7,
     );
   }
 
@@ -124,6 +130,7 @@ class AppColors extends ThemeExtension<AppColors> {
       color4: Color.lerp(color4, other.color4, t),
       color5: Color.lerp(color5, other.color5, t),
       color6: Color.lerp(color6, other.color6, t),
+      color7: Color.lerp(color7, other.color7, t),
     );
   }
 }
