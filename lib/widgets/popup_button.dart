@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rend/provider/app_provider.dart';
 import 'package:rend/theme/theme.dart';
+import 'package:rend/widgets/common/list_divider.dart';
 
 enum ToolCode { select, artboard, pen, rectangle, ellipse, polygon }
 
@@ -225,14 +226,7 @@ class _PopUpItemState extends State<_PopUpItem> {
             ),
           ),
         ),
-        if (widget.item.hasDivider)
-          Divider(
-            height: 10,
-            thickness: 0.5,
-            indent: 0,
-            endIndent: 0,
-            color: colors(context).color7,
-          )
+        if (widget.item.hasDivider) const ListDivider()
       ],
     );
   }

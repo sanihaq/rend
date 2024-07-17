@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rend/pages/app_editor.dart';
 import 'package:rend/pages/settings_page.dart';
 import 'package:rend/provider/app_provider.dart';
 import 'package:rend/provider/theme_provider.dart';
@@ -204,7 +205,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                     ),
                   ],
                 ),
-                Container(),
+                const AppEditor(),
               ],
             ),
           ),

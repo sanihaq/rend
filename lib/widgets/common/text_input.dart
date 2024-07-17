@@ -31,16 +31,25 @@ class TextInput extends ConsumerStatefulWidget {
 class _TextInputState extends ConsumerState<TextInput> {
   late TextEditingController controller;
   bool _isDummyCalled = false;
+  late FocusNode _focusNode;
 
   @override
   void initState() {
     super.initState();
+    _focusNode = widget.focusNode ?? FocusNode();
     controller = TextEditingController(text: widget.value ?? '');
     ref.read(dummyTextInputTapProvider.notifier).addListener((_) {
       if (_isDummyCalled) {
         widget.onTapOutside?.call(controller.text);
         _isDummyCalled = false;
       }
+    });
+    _focusNode.addListener(() {
+      if (widget.readonly) return;
+      controller.selection = TextSelection(
+        baseOffset: 0,
+        extentOffset: controller.text.length,
+      );
     });
   }
 
@@ -61,18 +70,18 @@ class _TextInputState extends ConsumerState<TextInput> {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      focusNode: widget.focusNode,
+      focusNode: _focusNode,
       readOnly: widget.readonly,
       controller: controller,
       style: TextStyle(
         color: colors(context).color4,
-        fontSize: 14,
+        fontSize: 12,
         height: 1.2,
       ),
       cursorColor: colors(context).color4,
       decoration: const InputDecoration(
         border: InputBorder.none,
-        contentPadding: EdgeInsets.symmetric(horizontal: 2.0, vertical: 12.0),
+        contentPadding: EdgeInsets.symmetric(horizontal: 2.0, vertical: 14.0),
         isDense: true,
       ),
       onChanged: widget.onChanged,

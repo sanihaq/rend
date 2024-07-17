@@ -8,7 +8,10 @@ class AppInputTextfield extends ConsumerStatefulWidget {
   final double? width;
   final double? maxWidth;
   final IconData? suffixIcon;
+  final String? suffixText;
   final bool readonly;
+  final bool alwaysShowOutline;
+  final VisualDensity density;
   final String? value;
   final void Function(String?) onChanged;
   const AppInputTextfield({
@@ -16,7 +19,10 @@ class AppInputTextfield extends ConsumerStatefulWidget {
     this.width,
     this.maxWidth,
     this.suffixIcon,
+    this.suffixText,
+    this.density = VisualDensity.compact,
     this.readonly = false,
+    this.alwaysShowOutline = false,
     this.value,
     required this.onChanged,
   });
@@ -42,9 +48,11 @@ class _AppInputState extends ConsumerState<AppInputTextfield> {
       width: widget.width,
       maxWidth: widget.maxWidth ?? 120,
       isActive: isContainerActive,
+      alwaysShowOutline: widget.alwaysShowOutline,
+      density: widget.density,
       child: Row(
         children: [
-          if (widget.suffixIcon != null)
+          if (widget.suffixText != null || widget.suffixIcon != null)
             GestureDetector(
               onTap: () {
                 setState(() {
@@ -53,12 +61,20 @@ class _AppInputState extends ConsumerState<AppInputTextfield> {
                 textInputFocusNode.requestFocus();
               },
               child: Padding(
-                padding: const EdgeInsets.only(right: 4.0),
-                child: Icon(
-                  widget.suffixIcon,
-                  size: 18,
-                  color: colors(context).color7,
-                ),
+                padding: const EdgeInsets.only(left: 2.0, right: 4.0),
+                child: widget.suffixIcon != null
+                    ? Icon(
+                        widget.suffixIcon,
+                        size: 18,
+                        color: colors(context).color7,
+                      )
+                    : Text(
+                        widget.suffixText ?? '',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: colors(context).color7,
+                        ),
+                      ),
               ),
             ),
           Expanded(
@@ -66,6 +82,7 @@ class _AppInputState extends ConsumerState<AppInputTextfield> {
               focusNode: textInputFocusNode,
               onChanged: widget.onChanged,
               readonly: widget.readonly,
+              value: widget.value,
               onTap: () {
                 setState(() {
                   isContainerActive = true;

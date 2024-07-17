@@ -8,12 +8,16 @@ class InputWrapper extends StatefulWidget {
     required this.maxWidth,
     required this.child,
     this.isActive = false,
+    this.alwaysShowOutline = false,
+    this.density = VisualDensity.compact,
   });
 
   final double? width;
+  final bool alwaysShowOutline;
   final bool isActive;
   final double maxWidth;
   final Widget child;
+  final VisualDensity density;
 
   @override
   State<InputWrapper> createState() => _InputWrapperState();
@@ -48,19 +52,23 @@ class _InputWrapperState extends State<InputWrapper> {
         decoration: BoxDecoration(
           color: _isActive || _isOnHover ? colors(context).color6 : null,
           borderRadius: BorderRadius.circular(4),
-          border: _isActive || _isOnHover
+          border: widget.alwaysShowOutline || _isActive || _isOnHover
               ? Border.all(
-                  color: colors(context).color3 ?? Colors.transparent,
-                  width: 2,
+                  color: _isActive
+                      ? colors(context).color8 ??
+                          colors(context).color3 ??
+                          Colors.transparent
+                      : colors(context).color3 ?? Colors.transparent,
+                  width: _isActive ? 1.4 : 1.2,
                   strokeAlign: BorderSide.strokeAlignOutside,
                 )
               : null,
         ),
-        height: 32,
+        height: widget.density == VisualDensity.compact ? 28 : 32,
         width: widget.width,
         constraints: BoxConstraints(maxWidth: widget.maxWidth),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 2.0),
+          padding: const EdgeInsets.symmetric(horizontal: 2.8),
           child: widget.child,
         ),
       ),

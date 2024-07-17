@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rend/provider/app_provider.dart';
 import 'package:rend/theme/theme.dart';
 import 'package:rend/widgets/common/input_wrapper.dart';
+import 'package:rend/widgets/common/list_divider.dart';
 import 'package:rend/widgets/common/text_input.dart';
 
 class DropdownItem<T> {
@@ -21,6 +22,8 @@ class AppInputDropdown<T> extends ConsumerStatefulWidget {
   final double? maxWidth;
   final T? value;
   final bool readonly;
+  final bool alwaysShowOutline;
+  final VisualDensity density;
   final void Function(T?) onChanged;
   final List<DropdownItem<T>> dropdownItems;
   const AppInputDropdown({
@@ -29,7 +32,9 @@ class AppInputDropdown<T> extends ConsumerStatefulWidget {
     this.maxWidth,
     this.value,
     this.readonly = false,
+    this.alwaysShowOutline = false,
     required this.onChanged,
+    this.density = VisualDensity.compact,
     this.dropdownItems = const [],
   });
 
@@ -143,6 +148,8 @@ class _AppInputState<T> extends ConsumerState<AppInputDropdown> {
       width: widget.width,
       maxWidth: widget.maxWidth ?? _maxWidth,
       isActive: isContainerActive,
+      alwaysShowOutline: widget.alwaysShowOutline,
+      density: widget.density,
       child: Row(
         children: [
           Expanded(
@@ -222,14 +229,7 @@ class _ListItemState extends State<_ListItem> {
             ),
           ),
         ),
-        if (widget.item.isDivided)
-          Divider(
-            height: 10,
-            thickness: 0.5,
-            indent: 0,
-            endIndent: 0,
-            color: colors(context).color7,
-          )
+        if (widget.item.isDivided) const ListDivider()
       ],
     );
   }
