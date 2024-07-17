@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rend/pages/settings_page.dart';
 import 'package:rend/provider/app_provider.dart';
 import 'package:rend/provider/theme_provider.dart';
 import 'package:rend/store/shared_preferences.dart';
 import 'package:rend/theme/theme.dart';
-import 'package:rend/widgets/app_input_dropdown.dart';
-import 'package:rend/widgets/app_input_textfield.dart';
 import 'package:rend/widgets/horizontal_tab_bar.dart';
+import 'package:rend/widgets/popup_button.dart';
 import 'package:rend/widgets/vertical_tab_bar.dart';
 
 void main() async {
@@ -111,11 +111,64 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                                 ),
                               ],
                             )
-                          : const Row(
+                          : Row(
                               children: [
-                                Icon(
-                                  Icons.menu,
-                                  color: Colors.white,
+                                const Padding(
+                                  padding:
+                                      EdgeInsets.only(left: 8.0, right: 12.0),
+                                  child: Icon(
+                                    Icons.menu,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                AppPopupMenuButton(
+                                  items: [
+                                    AppPopupMenuItem(
+                                      toolCode: ToolCode.select,
+                                      icon: Icons.arrow_upward_outlined,
+                                      title: 'Select',
+                                      info: 'V',
+                                    ),
+                                  ],
+                                ),
+                                AppPopupMenuButton(
+                                  items: [
+                                    AppPopupMenuItem(
+                                      toolCode: ToolCode.artboard,
+                                      icon: Icons.border_style_outlined,
+                                      title: 'Artboard',
+                                      info: 'A',
+                                    ),
+                                  ],
+                                ),
+                                AppPopupMenuButton(
+                                  items: [
+                                    AppPopupMenuItem(
+                                      toolCode: ToolCode.pen,
+                                      icon: Icons.create_sharp,
+                                      title: 'Pen',
+                                      info: 'P',
+                                      hasDivider: true,
+                                    ),
+                                    AppPopupMenuItem(
+                                      toolCode: ToolCode.rectangle,
+                                      icon: Icons.check_box_outline_blank,
+                                      title: 'Rectangle',
+                                      info: 'R',
+                                    ),
+                                    AppPopupMenuItem(
+                                      toolCode: ToolCode.ellipse,
+                                      icon: Icons.circle_outlined,
+                                      title: 'Ellipse',
+                                      info: 'O',
+                                    ),
+                                    AppPopupMenuItem(
+                                      toolCode: ToolCode.polygon,
+                                      icon: Icons.pentagon_outlined,
+                                      title: 'Polygon',
+                                      info: 'O',
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
@@ -145,54 +198,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                           Container(),
                           Container(),
                           Container(),
-                          ListView(
-                            padding: const EdgeInsets.all(4.0),
-                            children: [
-                              ListTile(
-                                title: Text(
-                                  "Text input",
-                                  style: Theme.of(context).textTheme.titleSmall,
-                                ),
-                                trailing: AppInputTextfield(onChanged: (v) {}),
-                              ),
-                              const SizedBox(height: 4),
-                              ListTile(
-                                title: Text(
-                                  "Theme mode",
-                                  style: Theme.of(context).textTheme.titleSmall,
-                                ),
-                                trailing: Consumer(
-                                  builder: (context, ref, child) {
-                                    var themeMode =
-                                        ref.watch(themeModeProvider);
-                                    return AppInputDropdown<int>(
-                                      value: themeMode,
-                                      readonly: true,
-                                      onChanged: (v) {
-                                        ref
-                                            .read(themeModeProvider.notifier)
-                                            .state = v ?? 0;
-                                        SharedStore().setThemeMode(v ?? 0);
-                                      } as void Function(
-                                          dynamic), // FIXME: fix type
-                                      dropdownItems: const [
-                                        DropdownItem<int>(
-                                          label: 'System',
-                                          value: 0,
-                                          isDivided: true,
-                                        ),
-                                        DropdownItem<int>(
-                                            label: 'Dark', value: 2),
-                                        DropdownItem<int>(
-                                            label: 'Light', value: 1),
-                                      ],
-                                    );
-                                  },
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                            ],
-                          ),
+                          const SettingsPage(),
                         ],
                       ),
                     ),

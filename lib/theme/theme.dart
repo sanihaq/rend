@@ -10,6 +10,7 @@ const _lightColor = AppColors(
   color5: Color(0xFFBEBDBD),
   color6: Color(0xFFE8E6E6),
   color7: Colors.black54,
+  color8: Color(0xFF4a97e6),
 );
 const _darkColor = AppColors(
   color1: Color(0xFF252525),
@@ -19,6 +20,7 @@ const _darkColor = AppColors(
   color5: Color(0xFF111111),
   color6: Color(0xFF1d1d1d),
   color7: Color(0xFF808080),
+  color8: Color(0xFF4a97e6),
 );
 
 ThemeData getAppTheme(BuildContext context, bool isDarkTheme) {
@@ -86,6 +88,7 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color? color5;
   final Color? color6;
   final Color? color7;
+  final Color? color8;
 
   const AppColors({
     required this.color1,
@@ -95,6 +98,7 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.color5,
     required this.color6,
     required this.color7,
+    required this.color8,
   });
 
   @override
@@ -106,6 +110,7 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? color5,
     Color? color6,
     Color? color7,
+    Color? color8,
   }) {
     return AppColors(
       color1: color1 ?? this.color1,
@@ -115,6 +120,7 @@ class AppColors extends ThemeExtension<AppColors> {
       color5: color5 ?? this.color5,
       color6: color6 ?? this.color6,
       color7: color7 ?? this.color7,
+      color8: color8 ?? this.color8,
     );
   }
 
@@ -131,6 +137,7 @@ class AppColors extends ThemeExtension<AppColors> {
       color5: Color.lerp(color5, other.color5, t),
       color6: Color.lerp(color6, other.color6, t),
       color7: Color.lerp(color7, other.color7, t),
+      color8: Color.lerp(color8, other.color7, t),
     );
   }
 }
