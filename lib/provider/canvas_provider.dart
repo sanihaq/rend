@@ -86,6 +86,7 @@ class AppCanvasNotifier extends ChangeNotifier {
   }
 
   void _updateHeight(BaseObject object, double deltaY, bool reverse) {
+    bool flipReset = false;
     double newH = object.height + deltaY;
     if (_isFlipped || newH <= 0) {
       if (!_isFlipped) {
@@ -99,8 +100,7 @@ class AppCanvasNotifier extends ChangeNotifier {
           if (object.height - deltaY >= 0) {
             newH = object.height - deltaY;
           } else {
-            _isFlipped = false;
-            _isFlippedNegative = null;
+            flipReset = true;
           }
         }
       }
@@ -113,9 +113,24 @@ class AppCanvasNotifier extends ChangeNotifier {
             : object.position.dy + (deltaY * 0.5),
       );
     } else {
-      newH += deltaY;
+      if (_isFlipped) {
+        if (_isFlippedNegative != null &&
+            _isFlippedNegative! &&
+            deltaY > 0 &&
+            object.height - deltaY >= 0) {
+          newH -= deltaY.abs();
+        } else {
+          newH += deltaY.abs();
+        }
+      } else {
+        newH += deltaY;
+      }
     }
-    object.height = newH;
+    if (flipReset) {
+      _isFlipped = false;
+      _isFlippedNegative = null;
+    }
+    object.height = newH < 0 ? 0 : newH;
     notifyListeners();
   }
 
@@ -125,6 +140,7 @@ class AppCanvasNotifier extends ChangeNotifier {
   }
 
   void _updateWidth(BaseObject object, double deltaX, bool reverse) {
+    bool flipReset = false;
     double newW = object.width + deltaX;
     if (_isFlipped || newW <= 0) {
       if (!_isFlipped) {
@@ -138,8 +154,7 @@ class AppCanvasNotifier extends ChangeNotifier {
           if (object.width - deltaX >= 0) {
             newW = object.width - deltaX;
           } else {
-            _isFlipped = false;
-            _isFlippedNegative = null;
+            flipReset = true;
           }
         }
       }
@@ -152,9 +167,24 @@ class AppCanvasNotifier extends ChangeNotifier {
         object.position.dy,
       );
     } else {
-      newW += deltaX;
+      if (_isFlipped) {
+        if (_isFlippedNegative != null &&
+            _isFlippedNegative! &&
+            deltaX > 0 &&
+            object.height - deltaX >= 0) {
+          newW -= deltaX.abs();
+        } else {
+          newW += deltaX.abs();
+        }
+      } else {
+        newW += deltaX;
+      }
     }
-    object.width = newW;
+    if (flipReset) {
+      _isFlipped = false;
+      _isFlippedNegative = null;
+    }
+    object.width = newW < 0 ? 0 : newW;
     notifyListeners();
   }
 
