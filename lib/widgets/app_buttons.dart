@@ -22,7 +22,7 @@ class _AppButtonState extends ConsumerState<AppButton> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: widget.onTap,
       onHover: (h) {
         setState(() {
           _isHovered = h;
@@ -44,6 +44,47 @@ class _AppButtonState extends ConsumerState<AppButton> {
               color:
                   _isHovered ? colors(context).color4 : colors(context).color7,
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class LinkButton extends StatefulWidget {
+  const LinkButton({
+    super.key,
+    this.isActive = false,
+    this.onTap,
+  });
+  final bool isActive;
+  final void Function()? onTap;
+
+  @override
+  State<LinkButton> createState() => _LinkButtonState();
+}
+
+class _LinkButtonState extends State<LinkButton> {
+  bool _isHovered = false;
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onHover: (v) {
+        setState(() {
+          _isHovered = v;
+        });
+      },
+      onTap: widget.onTap,
+      child: SizedBox(
+        width: 18,
+        child: Transform.rotate(
+          angle: 3.14 / 2,
+          child: Icon(
+            widget.isActive || _isHovered ? Icons.link : Icons.link_off,
+            size: 18,
+            color: widget.isActive || _isHovered
+                ? colors(context).color7
+                : colors(context).color3,
           ),
         ),
       ),

@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rend/provider/canvas_provider.dart';
 import 'package:rend/theme/theme.dart';
-import 'package:rend/widgets/app_button.dart';
-import 'package:rend/widgets/app_input_textfield.dart';
+import 'package:rend/views/app_canvas.dart';
+import 'package:rend/views/properties_container.dart';
+import 'package:rend/views/property_views.dart';
 
-class AppEditor extends StatelessWidget {
+class AppEditor extends ConsumerWidget {
   const AppEditor({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+    final canvas = ref.read(canvasStateProvider);
     return Container(
       color: colors(context).color5,
       child: Padding(
@@ -30,14 +34,20 @@ class AppEditor extends StatelessWidget {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(4),
+                child: GestureDetector(
+                  onTap: () {
+                    canvas.selectObject(null);
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(4),
+                      ),
                     ),
+                    clipBehavior: Clip.hardEdge,
+                    child: const AppCanvas(),
                   ),
-                  child: const AppCanvas(),
                 ),
               ),
             ),
@@ -47,22 +57,21 @@ class AppEditor extends StatelessWidget {
                 height: MediaQuery.of(context).size.height - 80,
                 child: Column(
                   children: List.generate(
-                    2,
+                    3,
                     (i) {
-                      var container = Padding(
-                        padding: EdgeInsets.only(bottom: i < 1 ? 2.0 : 0),
-                        child: Container(
-                          constraints: const BoxConstraints(minHeight: 40),
-                          decoration: BoxDecoration(
-                            color:
-                                Theme.of(context).appBarTheme.backgroundColor,
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(4),
-                            ),
-                          ),
-                        ),
+                      var container = PropertiesContainer(
+                        hasDivider: i < 2,
+                        title: 'title: $i',
+                        children: i == 1
+                            ? [const PositionProperty()]
+                            : [
+                                Container(),
+                                Container(),
+                                Container(),
+                              ],
+                        child: i == 0 ? Container() : null,
                       );
-                      return i == 1
+                      return i == 2
                           ? Expanded(
                               child: container,
                             )
@@ -75,56 +84,6 @@ class AppEditor extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class AppCanvas extends StatelessWidget {
-  const AppCanvas({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Center(
-          child: SizedBox(
-            height: 80,
-            width: 180,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    AppInputTextfield(
-                      alwaysShowOutline: true,
-                      width: 80,
-                      suffixText: 'W',
-                      value: '500',
-                      onChanged: (v) {},
-                    ),
-                    const SizedBox(width: 16),
-                    AppInputTextfield(
-                      alwaysShowOutline: true,
-                      width: 80,
-                      suffixText: 'H',
-                      value: '500',
-                      onChanged: (v) {},
-                    ),
-                  ],
-                ),
-                AppButton(
-                  onTap: () {},
-                  text: 'Create artboard',
-                )
-              ],
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

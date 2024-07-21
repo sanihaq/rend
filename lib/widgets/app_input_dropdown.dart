@@ -24,7 +24,7 @@ class AppInputDropdown<T> extends ConsumerStatefulWidget {
   final bool readonly;
   final bool alwaysShowOutline;
   final VisualDensity density;
-  final void Function(T?) onChanged;
+  final void Function(T?) onSubmitted;
   final List<DropdownItem<T>> dropdownItems;
   const AppInputDropdown({
     super.key,
@@ -33,7 +33,7 @@ class AppInputDropdown<T> extends ConsumerStatefulWidget {
     this.value,
     this.readonly = false,
     this.alwaysShowOutline = false,
-    required this.onChanged,
+    required this.onSubmitted,
     this.density = VisualDensity.compact,
     this.dropdownItems = const [],
   });
@@ -120,7 +120,7 @@ class _AppInputState<T> extends ConsumerState<AppInputDropdown> {
               return _ListItem(
                 item: item,
                 onTap: () {
-                  widget.onChanged(item.value);
+                  widget.onSubmitted(item.value);
 
                   // _unFocus(); // NOTE: don't need call this "onTapOutside" already called unFocus at this point (possibly a need refactor)
                 },
@@ -156,7 +156,7 @@ class _AppInputState<T> extends ConsumerState<AppInputDropdown> {
             child: TextInput(
               value: getDisPlayValue(_value),
               focusNode: textInputFocusNode,
-              onChanged: widget.onChanged,
+              onSubmitted: widget.onSubmitted,
               readonly: widget.readonly,
               onTap: _showDropDown,
               onTapOutside: (_) async {

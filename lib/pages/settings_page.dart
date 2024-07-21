@@ -30,7 +30,7 @@ class _SettingsPageState extends State<SettingsPage>
             "Text input",
             style: Theme.of(context).textTheme.titleSmall,
           ),
-          trailing: AppInputTextfield(onChanged: (v) {}),
+          trailing: AppInputTextfield(onSubmitted: (v) {}),
         ),
         const SizedBox(height: 4),
         ListTile(
@@ -44,7 +44,7 @@ class _SettingsPageState extends State<SettingsPage>
               return AppInputDropdown<int>(
                 value: themeMode,
                 readonly: true,
-                onChanged: (v) {
+                onSubmitted: (v) {
                   ref.read(themeModeProvider.notifier).state = v ?? 0;
                   SharedStore().setThemeMode(v ?? 0);
                 } as void Function(dynamic), // FIXME: fix type

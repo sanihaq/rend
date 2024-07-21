@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' hide TextInput;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rend/theme/theme.dart';
 import 'package:rend/widgets/common/input_wrapper.dart';
@@ -13,7 +14,9 @@ class AppInputTextfield extends ConsumerStatefulWidget {
   final bool alwaysShowOutline;
   final VisualDensity density;
   final String? value;
-  final void Function(String?) onChanged;
+  final List<TextInputFormatter> inputFormatters;
+  final void Function(String?) onSubmitted;
+  final void Function(String?)? onChanged;
   const AppInputTextfield({
     super.key,
     this.width,
@@ -24,7 +27,9 @@ class AppInputTextfield extends ConsumerStatefulWidget {
     this.readonly = false,
     this.alwaysShowOutline = false,
     this.value,
-    required this.onChanged,
+    this.inputFormatters = const [],
+    required this.onSubmitted,
+    this.onChanged,
   });
 
   @override
@@ -80,9 +85,11 @@ class _AppInputState extends ConsumerState<AppInputTextfield> {
           Expanded(
             child: TextInput(
               focusNode: textInputFocusNode,
+              onSubmitted: widget.onSubmitted,
               onChanged: widget.onChanged,
               readonly: widget.readonly,
               value: widget.value,
+              inputFormatters: widget.inputFormatters,
               onTap: () {
                 setState(() {
                   isContainerActive = true;

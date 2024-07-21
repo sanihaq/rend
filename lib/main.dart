@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rend/objects/art_board.dart';
 import 'package:rend/pages/app_editor.dart';
 import 'package:rend/pages/settings_page.dart';
 import 'package:rend/provider/app_provider.dart';
@@ -7,6 +8,7 @@ import 'package:rend/provider/theme_provider.dart';
 import 'package:rend/store/shared_preferences.dart';
 import 'package:rend/theme/theme.dart';
 import 'package:rend/widgets/horizontal_tab_bar.dart';
+import 'package:rend/widgets/objects/rectangle_widget.dart';
 import 'package:rend/widgets/popup_button.dart';
 import 'package:rend/widgets/vertical_tab_bar.dart';
 
@@ -196,7 +198,22 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                       child: TabBarView(
                         controller: verticalTabController,
                         children: [
-                          Container(),
+                          Container(
+                            child: Center(
+                              child: GestureDetector(
+                                onTap: () {
+                                  print('object');
+                                },
+                                child: RectangleWidget(
+                                  object: Artboard(
+                                      id: 1,
+                                      name: 'name sdsd',
+                                      width: 100,
+                                      height: 200),
+                                ),
+                              ),
+                            ),
+                          ),
                           Container(),
                           Container(),
                           const SettingsPage(),

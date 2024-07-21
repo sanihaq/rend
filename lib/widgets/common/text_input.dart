@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rend/provider/app_provider.dart';
 import 'package:rend/theme/theme.dart';
@@ -13,15 +14,19 @@ class TextInput extends ConsumerStatefulWidget {
     this.value,
     this.onTap,
     this.onChanged,
+    required this.onSubmitted,
     this.onTapOutside,
+    this.inputFormatters = const [],
   });
   final double? width;
   final double? maxWidth;
   final String? value;
   final bool readonly;
   final FocusNode? focusNode;
+  final List<TextInputFormatter> inputFormatters;
   final void Function()? onTap;
   final void Function(String)? onChanged;
+  final void Function(String) onSubmitted;
   final void Function(String)? onTapOutside;
 
   @override
@@ -84,7 +89,11 @@ class _TextInputState extends ConsumerState<TextInput> {
         contentPadding: EdgeInsets.symmetric(horizontal: 2.0, vertical: 14.0),
         isDense: true,
       ),
+      inputFormatters: <TextInputFormatter>[
+        ...widget.inputFormatters,
+      ],
       onChanged: widget.onChanged,
+      onSubmitted: widget.onSubmitted,
       onTap: () {
         // should be trigger on focus (via focus node)
         ref.read(dummyTextInputTapProvider.notifier).state = widget.focusNode;
