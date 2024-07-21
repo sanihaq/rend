@@ -68,7 +68,24 @@ class AppCanvasNotifier extends ChangeNotifier {
     _isFlippedNegative = null;
   }
 
+  void updateWidthHeight(
+    BaseObject object, {
+    required double deltaX,
+    required double deltaY,
+    required bool reverseX,
+    required bool reverseY,
+  }) {
+    _updateWidth(object, deltaX, reverseX);
+    _updateHeight(object, deltaY, reverseY);
+    notifyListeners();
+  }
+
   void updateHeight(BaseObject object, double deltaY, bool reverse) {
+    _updateHeight(object, deltaY, reverse);
+    notifyListeners();
+  }
+
+  void _updateHeight(BaseObject object, double deltaY, bool reverse) {
     double newH = object.height + deltaY;
     if (_isFlipped || newH <= 0) {
       if (!_isFlipped) {
@@ -103,6 +120,11 @@ class AppCanvasNotifier extends ChangeNotifier {
   }
 
   void updateWidth(BaseObject object, double deltaX, bool reverse) {
+    _updateWidth(object, deltaX, reverse);
+    notifyListeners();
+  }
+
+  void _updateWidth(BaseObject object, double deltaX, bool reverse) {
     double newW = object.width + deltaX;
     if (_isFlipped || newW <= 0) {
       if (!_isFlipped) {

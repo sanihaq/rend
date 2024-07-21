@@ -15,8 +15,8 @@ class CreateArtboardDialog extends StatefulWidget {
 
 class _CreateArtboardDialogState extends State<CreateArtboardDialog> {
   bool _isLinked = false;
-  double? _width = 500;
-  double? _height = 500;
+  double? _width = 100;
+  double? _height = 100;
   double? _wBy;
   double? _hBy;
 

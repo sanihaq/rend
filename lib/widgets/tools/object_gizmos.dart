@@ -170,12 +170,28 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                   right: widget.object.width, bottom: widget.object.height),
               child: MouseRegion(
                 cursor: SystemMouseCursors.resizeUpLeft,
-                onEnter: (_) {
-                  // print('object');
-                },
                 child: GestureDetector(
-                  onTap: () {
-                    print('hello2');
+                  onPanUpdate: (d) {
+                    if (d.delta.dx < 0) {
+                      canvas.updateWidthHeight(
+                        widget.object,
+                        deltaX: -d.delta.dx,
+                        reverseX: true,
+                        deltaY: -d.delta.dy,
+                        reverseY: true,
+                      );
+                    } else {
+                      canvas.updateWidthHeight(
+                        widget.object,
+                        deltaX: -d.delta.dx,
+                        reverseX: true,
+                        deltaY: -d.delta.dy,
+                        reverseY: true,
+                      );
+                    }
+                  },
+                  onPanEnd: (_) {
+                    canvas.onDragEnd();
                   },
                   child: Container(
                     width: _controllerSize,
@@ -195,12 +211,28 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                   left: widget.object.width, bottom: widget.object.height),
               child: MouseRegion(
                 cursor: SystemMouseCursors.resizeUpLeft,
-                onEnter: (_) {
-                  // print('object');
-                },
                 child: GestureDetector(
-                  onTap: () {
-                    print('hello2');
+                  onPanUpdate: (d) {
+                    if (d.delta.dx < 0) {
+                      canvas.updateWidthHeight(
+                        widget.object,
+                        deltaX: d.delta.dx,
+                        reverseX: false,
+                        deltaY: -d.delta.dy,
+                        reverseY: true,
+                      );
+                    } else {
+                      canvas.updateWidthHeight(
+                        widget.object,
+                        deltaX: d.delta.dx,
+                        reverseX: false,
+                        deltaY: d.delta.dy.abs(),
+                        reverseY: true,
+                      );
+                    }
+                  },
+                  onPanEnd: (_) {
+                    canvas.onDragEnd();
                   },
                   child: Container(
                     width: _controllerSize,
@@ -220,12 +252,28 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                   left: widget.object.width, top: widget.object.height),
               child: MouseRegion(
                 cursor: SystemMouseCursors.resizeUpLeft,
-                onEnter: (_) {
-                  // print('object');
-                },
                 child: GestureDetector(
-                  onTap: () {
-                    print('hello2');
+                  onPanUpdate: (d) {
+                    if (d.delta.dx < 0) {
+                      canvas.updateWidthHeight(
+                        widget.object,
+                        deltaX: d.delta.dx,
+                        reverseX: false,
+                        deltaY: d.delta.dy,
+                        reverseY: false,
+                      );
+                    } else {
+                      canvas.updateWidthHeight(
+                        widget.object,
+                        deltaX: d.delta.dx,
+                        reverseX: false,
+                        deltaY: d.delta.dy,
+                        reverseY: false,
+                      );
+                    }
+                  },
+                  onPanEnd: (_) {
+                    canvas.onDragEnd();
                   },
                   child: Container(
                     width: _controllerSize,
@@ -243,12 +291,28 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                   right: widget.object.width, top: widget.object.height),
               child: MouseRegion(
                 cursor: SystemMouseCursors.resizeUpLeft,
-                onEnter: (_) {
-                  // print('object');
-                },
                 child: GestureDetector(
-                  onTap: () {
-                    print('hello2');
+                  onPanUpdate: (d) {
+                    if (d.delta.dx < 0) {
+                      canvas.updateWidthHeight(
+                        widget.object,
+                        deltaX: -d.delta.dx,
+                        reverseX: true,
+                        deltaY: d.delta.dy,
+                        reverseY: false,
+                      );
+                    } else {
+                      canvas.updateWidthHeight(
+                        widget.object,
+                        deltaX: -d.delta.dx,
+                        reverseX: true,
+                        deltaY: d.delta.dy,
+                        reverseY: false,
+                      );
+                    }
+                  },
+                  onPanEnd: (_) {
+                    canvas.onDragEnd();
                   },
                   child: Container(
                     width: _controllerSize,
