@@ -3,6 +3,37 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rend/provider/canvas_provider.dart';
 import 'package:rend/widgets/app_input_number_field.dart';
 
+class RotationProperty extends ConsumerWidget {
+  const RotationProperty({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, ref) {
+    final canvas = ref.watch(canvasStateProvider);
+    return canvas.selected == null
+        ? const SizedBox()
+        : Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text('Rotation'),
+              ),
+              AppInputNumberField(
+                suffixText: 'R',
+                value: canvas.selected!.rotation,
+                maxWidth: 120,
+                onSubmitted: (v) {
+                  if (v == null) return;
+                  canvas.updateRotation(canvas.selected!, v);
+                },
+              ),
+            ],
+          );
+  }
+}
+
 class PositionProperty extends ConsumerWidget {
   const PositionProperty({
     super.key,
@@ -10,8 +41,8 @@ class PositionProperty extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final canvas = ref.watch(canvasStateProvider);
-    return canvas.boards.isEmpty
+    final selected = ref.watch(canvasStateProvider).selected;
+    return selected == null
         ? const SizedBox()
         : Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -19,14 +50,14 @@ class PositionProperty extends ConsumerWidget {
               const Text('Position'),
               AppInputNumberField(
                 suffixText: 'X',
-                value: canvas.boards.first.position.dx,
+                value: selected.position.dx,
                 maxWidth: 80,
                 onSubmitted: (v) {},
               ),
               AppInputNumberField(
                 suffixText: 'Y',
                 width: 80,
-                value: canvas.boards.first.position.dy,
+                value: selected.position.dy,
                 onSubmitted: (v) {},
               ),
             ],

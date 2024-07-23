@@ -11,6 +11,12 @@ class RectanglePainter extends CustomPainter {
     // Calculate the center of the rectangle
     var rectCenter = Offset(object.width / 2, object.height / 2);
 
+    canvas.save();
+
+    // canvas.translate(rectCenter.dx, rectCenter.dy);
+    // canvas.rotate(math.pi / 1);
+    // canvas.translate(-rectCenter.dx, -rectCenter.dy);
+
     // Draw the rectangle
     canvas.drawRect(
       Rect.fromCenter(
@@ -22,6 +28,8 @@ class RectanglePainter extends CustomPainter {
         ..color = object.fills.firstOrNull ?? Colors.transparent
         ..style = PaintingStyle.fill,
     );
+
+    canvas.restore();
   }
 
   @override

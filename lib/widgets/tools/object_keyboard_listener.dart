@@ -37,6 +37,11 @@ class _KeyboardListenerState extends ConsumerState<AppKeyboardListener> {
               return KeyEventResult.handled;
             }
           }
+          if (event.logicalKey == LogicalKeyboardKey.shiftLeft ||
+              event.logicalKey == LogicalKeyboardKey.shiftRight) {
+            ref.read(isShiftIsPressedStateProvider.notifier).state = true;
+            return KeyEventResult.handled;
+          }
           if (event.logicalKey == LogicalKeyboardKey.altLeft ||
               event.logicalKey == LogicalKeyboardKey.altRight) {
             ref.read(isAltIsPressedStateProvider.notifier).state = true;
@@ -45,6 +50,11 @@ class _KeyboardListenerState extends ConsumerState<AppKeyboardListener> {
         }
 
         if (event is KeyUpEvent) {
+          if (event.logicalKey == LogicalKeyboardKey.shiftLeft ||
+              event.logicalKey == LogicalKeyboardKey.shiftRight) {
+            ref.read(isShiftIsPressedStateProvider.notifier).state = false;
+            return KeyEventResult.handled;
+          }
           if (event.logicalKey == LogicalKeyboardKey.altLeft ||
               event.logicalKey == LogicalKeyboardKey.altRight) {
             ref.read(isAltIsPressedStateProvider.notifier).state = false;
@@ -54,7 +64,7 @@ class _KeyboardListenerState extends ConsumerState<AppKeyboardListener> {
 
         return KeyEventResult.ignored;
       },
-      child: const SizedBox(),
+      child: widget.child ?? const SizedBox(),
     );
   }
 }

@@ -1,9 +1,12 @@
+import 'dart:math' as math;
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rend/objects/art_board.dart';
 import 'package:rend/objects/base_object.dart';
 
+final isShiftIsPressedStateProvider = StateProvider<bool>((ref) => false);
 final isAltIsPressedStateProvider = StateProvider<bool>((ref) => false);
 
 final canvasStateProvider =
@@ -48,15 +51,20 @@ class AppCanvasNotifier extends ChangeNotifier {
   }
 
   Offset getBoardActualPosition(BaseObject board) {
-    return Offset(
-      board.position.dx + board.width / 2,
-      board.position.dy + board.height / 2,
-    );
+    return board.position;
   }
 
-  void updatePosition(BaseObject object, Offset updateBy) {
-    final x = (object.position.dx + updateBy.dx);
-    final y = (object.position.dy + updateBy.dy);
+  void updatePosition(BaseObject object, Offset delta) {
+    final isShift = _ref.read(isShiftIsPressedStateProvider);
+    final radians = object.rotation * (math.pi / 180.0);
+    final cos = math.cos(radians);
+    final sin = math.sin(radians);
+    final by = Offset(
+      delta.dx * cos - delta.dy * sin,
+      delta.dx * sin + delta.dy * cos,
+    );
+    final x = (object.position.dx + by.dx);
+    final y = (object.position.dy + by.dy);
     object.position = Offset(x.roundToDouble(), y.roundToDouble());
     notifyListeners();
   }
@@ -188,7 +196,17 @@ class AppCanvasNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateSize(BaseObject object, Offset updateBy) {
+  void updateRotation(BaseObject object, double value) {
+    object.rotation = value;
+    notifyListeners();
+  }
+
+  void updateRotationBy(BaseObject object, double valueBy) {
+    object.rotation += valueBy;
+    notifyListeners();
+  }
+
+  void updateSizeBy(BaseObject object, Offset updateBy) {
     final x = (object.position.dx + updateBy.dx);
     final y = (object.position.dy + updateBy.dy);
     object.position = Offset(x.roundToDouble(), y.roundToDouble());

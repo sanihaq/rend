@@ -63,7 +63,10 @@ class AppEditor extends ConsumerWidget {
                         hasDivider: i < 2,
                         title: 'title: $i',
                         children: i == 1
-                            ? [const PositionProperty()]
+                            ? [
+                                const PositionProperty(),
+                                const RotationProperty(),
+                              ]
                             : [
                                 Container(),
                                 Container(),
