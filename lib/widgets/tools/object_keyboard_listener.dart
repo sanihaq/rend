@@ -5,16 +5,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rend/provider/canvas_provider.dart';
 
-class AppKeyboardListener extends ConsumerStatefulWidget {
-  const AppKeyboardListener({super.key, this.child});
+class ObjectKeyboardListener extends ConsumerStatefulWidget {
+  const ObjectKeyboardListener({super.key, this.child});
 
   final Widget? child;
 
   @override
-  ConsumerState<AppKeyboardListener> createState() => _KeyboardListenerState();
+  ConsumerState<ObjectKeyboardListener> createState() =>
+      _KeyboardListenerState();
 }
 
-class _KeyboardListenerState extends ConsumerState<AppKeyboardListener> {
+class _KeyboardListenerState extends ConsumerState<ObjectKeyboardListener> {
   @override
   void initState() {
     super.initState();

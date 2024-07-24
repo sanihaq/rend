@@ -69,6 +69,13 @@ class AppCanvasNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateOrigin(BaseObject object, Offset delta) {
+    final x = (object.origin.dx + delta.dx);
+    final y = (object.origin.dy + delta.dy);
+    object.origin = Offset(x.roundToDouble(), y.roundToDouble());
+    notifyListeners();
+  }
+
   bool _isFlipped = false;
   bool? _isFlippedNegative;
   void onDragEnd() {

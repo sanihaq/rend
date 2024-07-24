@@ -22,7 +22,7 @@ class _AppCanvasState extends ConsumerState<AppCanvas> {
   @override
   Widget build(BuildContext context) {
     final canvas = ref.watch(canvasStateProvider);
-    return AppKeyboardListener(
+    return ObjectKeyboardListener(
       child: Stack(
         children: [
           if (canvas.boards.isEmpty)
@@ -31,30 +31,27 @@ class _AppCanvasState extends ConsumerState<AppCanvas> {
             ...canvas.boards.map(
               (board) => Center(
                 child: Transform.translate(
-                  offset: board.position,
-                  child: Stack(
-                    children: [
-                      Transform.rotate(
-                        angle: board.rotation * 3.14 / 180,
-                        child: Stack(
-                          children: [
-                            GestureDetector(
-                              onTap: () => canvas.selectObject(board),
-                              onPanUpdate: (d) {
-                                canvas.selectObject(board);
-                                canvas.updatePosition(board, d.delta);
-                              },
-                              child: RectangleWidget(object: board),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                  offset: board.position + board.origin,
+                  child: Transform.rotate(
+                    angle: board.rotation * 3.14 / 180,
+                    origin: -board.origin,
+                    child: GestureDetector(
+                      onTap: () => canvas.selectObject(board),
+                      onPanUpdate: (d) {
+                        canvas.selectObject(board);
+                        canvas.updatePosition(board, d.delta);
+                      },
+                      child: RectangleWidget(object: board),
+                    ),
                   ),
                 ),
               ),
             ),
-          if (canvas.selected != null) SelectGizmos(object: canvas.selected!)
+          if (canvas.selected != null)
+            SelectGizmos(
+              object: canvas.selected!,
+              child: const ObjectKeyboardListener(),
+            )
         ],
       ),
     );

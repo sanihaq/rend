@@ -22,8 +22,8 @@ abstract class BaseObject {
     this.scaleY = 1,
     this.rotation = 0,
     required this.position,
-    Offset? origin,
+    this.origin = Offset.zero,
     this.fills = const [],
     this.strokes = const [],
-  }) : origin = origin ?? Offset(width / 2, height / 2);
+  });
 }

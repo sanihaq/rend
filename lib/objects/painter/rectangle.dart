@@ -13,10 +13,6 @@ class RectanglePainter extends CustomPainter {
 
     canvas.save();
 
-    // canvas.translate(rectCenter.dx, rectCenter.dy);
-    // canvas.rotate(math.pi / 1);
-    // canvas.translate(-rectCenter.dx, -rectCenter.dy);
-
     // Draw the rectangle
     canvas.drawRect(
       Rect.fromCenter(
