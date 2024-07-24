@@ -3,19 +3,21 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rend/provider/app_provider.dart';
 import 'package:rend/provider/canvas_provider.dart';
+import 'package:rend/widgets/popup_button.dart';
 
-class ObjectKeyboardListener extends ConsumerStatefulWidget {
-  const ObjectKeyboardListener({super.key, this.child});
+class CanvasKeyboardListener extends ConsumerStatefulWidget {
+  const CanvasKeyboardListener({super.key, this.child});
 
   final Widget? child;
 
   @override
-  ConsumerState<ObjectKeyboardListener> createState() =>
+  ConsumerState<CanvasKeyboardListener> createState() =>
       _KeyboardListenerState();
 }
 
-class _KeyboardListenerState extends ConsumerState<ObjectKeyboardListener> {
+class _KeyboardListenerState extends ConsumerState<CanvasKeyboardListener> {
   @override
   void initState() {
     super.initState();
@@ -46,6 +48,15 @@ class _KeyboardListenerState extends ConsumerState<ObjectKeyboardListener> {
           if (event.logicalKey == LogicalKeyboardKey.altLeft ||
               event.logicalKey == LogicalKeyboardKey.altRight) {
             ref.read(isAltIsPressedStateProvider.notifier).state = true;
+            return KeyEventResult.handled;
+          }
+          if (ref.read(canvasStateProvider).selected != null &&
+              event.logicalKey == LogicalKeyboardKey.keyY) {
+            final f = ref.read(isFreezeProviderState);
+            ref.read(activeToolStateProvider.notifier).state =
+                f ? ToolCode.select : ToolCode.freeze;
+            ref.read(isFreezeProviderState.notifier).state = !f;
+
             return KeyEventResult.handled;
           }
         }

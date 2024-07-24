@@ -4,14 +4,14 @@ import 'package:rend/provider/app_provider.dart';
 import 'package:rend/theme/theme.dart';
 import 'package:rend/widgets/common/list_divider.dart';
 
-enum ToolCode { select, artboard, pen, rectangle, ellipse, polygon }
+enum ToolCode { select, freeze, artboard, pen, rectangle, ellipse, polygon }
 
 class AppPopupMenuItem {
   final ToolCode toolCode;
   final String title;
   final String? info;
   final IconData icon;
-  final VoidCallback? onTap;
+  final bool Function()? onTap;
   final bool hasDivider;
   AppPopupMenuItem({
     required this.toolCode,
@@ -103,6 +103,8 @@ class _PopupMenuButtonState extends ConsumerState<AppPopupMenuButton> {
                             item: e,
                             isActive: activeTool == e.toolCode,
                             onTap: () {
+                              final r = e.onTap?.call();
+                              if (r == null || !r) return;
                               ref.read(activeToolStateProvider.notifier).state =
                                   e.toolCode;
                               ref.read(appStackProvider.notifier).state = null;

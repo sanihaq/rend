@@ -4,6 +4,7 @@ import 'package:rend/objects/art_board.dart';
 import 'package:rend/pages/app_editor.dart';
 import 'package:rend/pages/settings_page.dart';
 import 'package:rend/provider/app_provider.dart';
+import 'package:rend/provider/canvas_provider.dart';
 import 'package:rend/provider/theme_provider.dart';
 import 'package:rend/store/shared_preferences.dart';
 import 'package:rend/theme/theme.dart';
@@ -131,6 +132,32 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                                       icon: Icons.arrow_upward_outlined,
                                       title: 'Select',
                                       info: 'V',
+                                      onTap: () {
+                                        if (ref.read(isFreezeProviderState)) {
+                                          ref
+                                              .read(isFreezeProviderState
+                                                  .notifier)
+                                              .state = false;
+                                        }
+                                        return true;
+                                      },
+                                    ),
+                                    AppPopupMenuItem(
+                                      toolCode: ToolCode.freeze,
+                                      icon: Icons.ac_unit,
+                                      title: 'Freeze',
+                                      info: 'Y',
+                                      onTap: () {
+                                        if (ref
+                                                .read(canvasStateProvider)
+                                                .selected ==
+                                            null) return false;
+                                        ref
+                                            .read(
+                                                isFreezeProviderState.notifier)
+                                            .state = true;
+                                        return true;
+                                      },
                                     ),
                                   ],
                                 ),

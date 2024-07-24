@@ -6,6 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rend/objects/art_board.dart';
 import 'package:rend/objects/base_object.dart';
 
+final isFreezeProviderState = StateProvider<bool>((ref) => false);
+
 final isShiftIsPressedStateProvider = StateProvider<bool>((ref) => false);
 final isAltIsPressedStateProvider = StateProvider<bool>((ref) => false);
 
@@ -26,6 +28,7 @@ class AppCanvasNotifier extends ChangeNotifier {
   List<Artboard> get boards => _boards;
 
   void selectObject(BaseObject? obj) {
+    if (_selected == obj) return;
     _selected = obj;
     notifyListeners();
   }
