@@ -7,7 +7,9 @@ import 'package:rend/widgets/tools/canvas_keyboard_listener.dart';
 import 'package:rend/widgets/tools/object_gizmos.dart';
 
 class AppCanvas extends ConsumerStatefulWidget {
-  const AppCanvas({super.key});
+  const AppCanvas({super.key, required this.isFreeze});
+
+  final bool isFreeze;
 
   @override
   ConsumerState<AppCanvas> createState() => _AppCanvasState();
@@ -22,9 +24,9 @@ class _AppCanvasState extends ConsumerState<AppCanvas> {
   @override
   Widget build(BuildContext context) {
     final canvas = ref.watch(canvasStateProvider);
-    final isFreeze = ref.watch(isFreezeProviderState);
 
     return CanvasKeyboardListener(
+      isFreeze: widget.isFreeze,
       child: Stack(
         children: [
           if (canvas.boards.isEmpty)
@@ -38,8 +40,10 @@ class _AppCanvasState extends ConsumerState<AppCanvas> {
                     angle: board.rotation * 3.14 / 180,
                     origin: -board.origin,
                     child: GestureDetector(
-                      onTap: isFreeze ? null : () => canvas.selectObject(board),
-                      onPanUpdate: isFreeze
+                      onTap: widget.isFreeze
+                          ? null
+                          : () => canvas.selectObject(board),
+                      onPanUpdate: widget.isFreeze
                           ? null
                           : (d) {
                               canvas.selectObject(board);
@@ -54,8 +58,7 @@ class _AppCanvasState extends ConsumerState<AppCanvas> {
           if (canvas.selected != null)
             SelectGizmos(
               object: canvas.selected!,
-              isFreeze: isFreeze,
-              child: const CanvasKeyboardListener(),
+              isFreeze: widget.isFreeze,
             )
         ],
       ),

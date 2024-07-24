@@ -10,6 +10,7 @@ abstract class BaseObject {
   double rotation;
   Offset position;
   Offset origin;
+  double strokeWidth;
   List<Color> fills;
   List<Color> strokes;
 
@@ -23,6 +24,7 @@ abstract class BaseObject {
     this.rotation = 0,
     required this.position,
     this.origin = Offset.zero,
+    this.strokeWidth = 0,
     this.fills = const [],
     this.strokes = const [],
   });

@@ -9,6 +9,25 @@ class Artboard extends BaseObject {
     required super.width,
     required super.height,
     super.position = const Offset(0, 0),
-    super.fills = const [boardDefaultColor],
+    required super.fills,
+    super.strokeWidth,
+    super.strokes,
   });
+
+  factory Artboard.empty({
+    required int id,
+    required String name,
+    required double width,
+    required double height,
+    Offset position = const Offset(0, 0),
+  }) {
+    return Artboard(
+      id: id,
+      name: name,
+      width: width,
+      height: height,
+      fills: [boardDefaultColor],
+      strokes: [],
+    );
+  }
 }

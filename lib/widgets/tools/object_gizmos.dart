@@ -6,7 +6,7 @@ import 'package:rend/theme/theme.dart';
 
 class SelectGizmos extends ConsumerStatefulWidget {
   const SelectGizmos(
-      {super.key, required this.object, this.child, this.isFreeze = false});
+      {super.key, required this.object, this.child, required this.isFreeze});
 
   final BaseObject object;
   final Widget? child;

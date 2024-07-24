@@ -8,9 +8,10 @@ import 'package:rend/provider/canvas_provider.dart';
 import 'package:rend/widgets/popup_button.dart';
 
 class CanvasKeyboardListener extends ConsumerStatefulWidget {
-  const CanvasKeyboardListener({super.key, this.child});
+  const CanvasKeyboardListener({super.key, this.child, required this.isFreeze});
 
   final Widget? child;
+  final bool isFreeze;
 
   @override
   ConsumerState<CanvasKeyboardListener> createState() =>
@@ -29,6 +30,7 @@ class _KeyboardListenerState extends ConsumerState<CanvasKeyboardListener> {
     return Focus(
       autofocus: true,
       onKeyEvent: (focus, event) {
+        if (widget.isFreeze) return KeyEventResult.ignored;
         // print(event.logicalKey);
         if (event is KeyDownEvent) {
           if (Platform.isMacOS &&

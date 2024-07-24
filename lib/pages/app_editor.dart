@@ -63,7 +63,7 @@ class AppEditor extends ConsumerWidget {
                         ),
                       ),
                       clipBehavior: Clip.hardEdge,
-                      child: const AppCanvas(),
+                      child: AppCanvas(isFreeze: isFreeze),
                     ),
                   );
                 }),
@@ -84,6 +84,8 @@ class AppEditor extends ConsumerWidget {
                             ? [
                                 const PositionProperty(),
                                 const RotationProperty(),
+                                const ColorFillProperty(),
+                                const ColorStrokeProperty(),
                               ]
                             : [
                                 Container(),

@@ -232,11 +232,12 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                                   print('object');
                                 },
                                 child: RectangleWidget(
-                                  object: Artboard(
-                                      id: 1,
-                                      name: 'name sdsd',
-                                      width: 100,
-                                      height: 200),
+                                  object: Artboard.empty(
+                                    id: 1,
+                                    name: 'name sdsd',
+                                    width: 100,
+                                    height: 200,
+                                  ),
                                 ),
                               ),
                             ),

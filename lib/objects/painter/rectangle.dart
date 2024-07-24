@@ -22,13 +22,27 @@ class RectanglePainter extends CustomPainter {
       ),
       Paint()
         ..color = object.fills.firstOrNull ?? Colors.transparent
-        ..style = PaintingStyle.fill,
+        ..style = PaintingStyle.fill
+        ..strokeWidth = object.strokeWidth,
     );
+
+    if (object.strokes.isNotEmpty) {
+      canvas.drawRect(
+        Rect.fromCenter(
+          center: rectCenter,
+          width: object.width,
+          height: object.height,
+        ),
+        Paint()
+          ..color = object.strokes.firstOrNull ?? Colors.transparent
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = object.strokeWidth,
+      );
+    }
 
     canvas.restore();
   }
 
   @override
-  bool shouldRepaint(covariant RectanglePainter oldDelegate) =>
-      object != oldDelegate.object;
+  bool shouldRepaint(covariant RectanglePainter oldDelegate) => true;
 }

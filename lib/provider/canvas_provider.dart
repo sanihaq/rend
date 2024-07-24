@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rend/objects/art_board.dart';
 import 'package:rend/objects/base_object.dart';
+import 'package:rend/objects/consts.dart';
 
 final isFreezeProviderState = StateProvider<bool>((ref) => false);
 
@@ -48,13 +49,31 @@ class AppCanvasNotifier extends ChangeNotifier {
   void addBoard(double width, double height) {
     final i = _getTheHighestId() + 1;
     _boards.add(
-      Artboard(id: i, name: 'Artboard $i', width: width, height: height),
+      Artboard.empty(id: i, name: 'Artboard $i', width: width, height: height),
     );
     notifyListeners();
   }
 
   Offset getBoardActualPosition(BaseObject board) {
     return board.position;
+  }
+
+  void updateStrokeWidth(BaseObject object, double width) {
+    object.strokeWidth = width;
+    if (object.strokes.isEmpty) object.strokes.add(objDefaultStrokeColor);
+    notifyListeners();
+  }
+
+  void updateStroke(BaseObject object, int index, Color color) {
+    if (index > object.fills.length - 1) return;
+    object.strokes[index] = color;
+    notifyListeners();
+  }
+
+  void updateFill(BaseObject object, int index, Color color) {
+    if (index > object.fills.length - 1) return;
+    object.fills[index] = color;
+    notifyListeners();
   }
 
   void updatePosition(BaseObject object, Offset delta) {
