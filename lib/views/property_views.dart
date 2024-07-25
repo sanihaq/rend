@@ -132,7 +132,7 @@ class _ColorStrokeState extends ConsumerState<ColorStrokeProperty> {
                                 onColorChanged: (c) {
                                   ref
                                       .read(canvasStateProvider)
-                                      .updateFill(selected, 0, c);
+                                      .updateStroke(selected, 0, c);
                                 },
                                 colorPickerWidth: width,
                                 pickerAreaHeightPercent: 0.7,

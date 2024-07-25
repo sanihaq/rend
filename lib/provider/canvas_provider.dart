@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
@@ -5,7 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rend/objects/art_board.dart';
 import 'package:rend/objects/base_object.dart';
-import 'package:rend/objects/consts.dart';
+
+final cleanGizmosLevelProviderState = StateProvider<int>((ref) => 0);
 
 final isFreezeProviderState = StateProvider<bool>((ref) => false);
 
@@ -58,22 +60,37 @@ class AppCanvasNotifier extends ChangeNotifier {
     return board.position;
   }
 
+  Timer? _clearGizmoTimeout;
+
+  void _cleanGizmoTimeout(int level) {
+    if (_ref.read(cleanGizmosLevelProviderState) != level) {
+      _ref.read(cleanGizmosLevelProviderState.notifier).state = level;
+    }
+    _clearGizmoTimeout?.cancel();
+    _clearGizmoTimeout = Timer(const Duration(milliseconds: 500), () {
+      _ref.read(cleanGizmosLevelProviderState.notifier).state = 0;
+    });
+  }
+
   void updateStrokeWidth(BaseObject object, double width) {
     object.strokeWidth = width;
-    if (object.strokes.isEmpty) object.strokes.add(objDefaultStrokeColor);
     notifyListeners();
+    _cleanGizmoTimeout(2);
   }
 
   void updateStroke(BaseObject object, int index, Color color) {
-    if (index > object.fills.length - 1) return;
+    if (index > object.strokes.length - 1) return;
     object.strokes[index] = color;
+    if (object.strokeWidth == 0) object.strokeWidth = 1;
     notifyListeners();
+    _cleanGizmoTimeout(2);
   }
 
   void updateFill(BaseObject object, int index, Color color) {
     if (index > object.fills.length - 1) return;
     object.fills[index] = color;
     notifyListeners();
+    _cleanGizmoTimeout(1);
   }
 
   void updatePosition(BaseObject object, Offset delta) {

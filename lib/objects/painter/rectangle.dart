@@ -26,7 +26,7 @@ class RectanglePainter extends CustomPainter {
         ..strokeWidth = object.strokeWidth,
     );
 
-    if (object.strokes.isNotEmpty) {
+    if (object.strokeWidth > 0) {
       canvas.drawRect(
         Rect.fromCenter(
           center: rectCenter,

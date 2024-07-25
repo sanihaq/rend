@@ -27,7 +27,7 @@ class Artboard extends BaseObject {
       width: width,
       height: height,
       fills: [boardDefaultColor],
-      strokes: [],
+      strokes: [objDefaultStrokeColor],
     );
   }
 }

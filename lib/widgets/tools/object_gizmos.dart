@@ -37,6 +37,7 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
   @override
   Widget build(BuildContext context) {
     final canvas = ref.read(canvasStateProvider);
+    final cleanGizmoLevel = ref.watch(cleanGizmosLevelProviderState);
     return Stack(
       children: [
         Transform.translate(
@@ -46,29 +47,30 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
             origin: -widget.object.origin,
             child: Stack(
               children: [
-                Center(
-                  child: GestureDetector(
-                    onPanUpdate: (d) {
-                      if (widget.isFreeze) {
-                        canvas.updateOrigin(widget.object, d.delta);
-                      } else {
-                        canvas.updatePosition(widget.object, d.delta);
-                      }
-                    },
-                    child: Container(
-                      width: widget.object.width + 2,
-                      height: widget.object.height + 2,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 1,
-                          color: colors(context).color9 ?? Colors.transparent,
+                if (cleanGizmoLevel <= 1)
+                  Center(
+                    child: GestureDetector(
+                      onPanUpdate: (d) {
+                        if (widget.isFreeze) {
+                          canvas.updateOrigin(widget.object, d.delta);
+                        } else {
+                          canvas.updatePosition(widget.object, d.delta);
+                        }
+                      },
+                      child: Container(
+                        width: widget.object.width + 2,
+                        height: widget.object.height + 2,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 1,
+                            color: colors(context).color9 ?? Colors.transparent,
+                          ),
                         ),
+                        child: widget.child,
                       ),
-                      child: widget.child,
                     ),
                   ),
-                ),
-                if (!widget.isFreeze)
+                if (cleanGizmoLevel == 0 && !widget.isFreeze)
                   Center(
                     child: Padding(
                       padding: EdgeInsets.only(bottom: widget.object.height),
@@ -98,7 +100,7 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                       ),
                     ),
                   ),
-                if (!widget.isFreeze)
+                if (cleanGizmoLevel == 0 && !widget.isFreeze)
                   Center(
                     child: Padding(
                       padding: EdgeInsets.only(top: widget.object.height),
@@ -128,7 +130,7 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                       ),
                     ),
                   ),
-                if (!widget.isFreeze)
+                if (cleanGizmoLevel == 0 && !widget.isFreeze)
                   Center(
                     child: Padding(
                       padding: EdgeInsets.only(right: widget.object.width),
@@ -158,7 +160,7 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                       ),
                     ),
                   ),
-                if (!widget.isFreeze)
+                if (cleanGizmoLevel == 0 && !widget.isFreeze)
                   Center(
                     child: Padding(
                       padding: EdgeInsets.only(left: widget.object.width),
@@ -189,7 +191,7 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                     ),
                   ),
                 // UP LEFT CORNER ROTATE GIZMO
-                if (!widget.isFreeze)
+                if (cleanGizmoLevel == 0 && !widget.isFreeze)
                   Center(
                     child: Padding(
                       padding: EdgeInsets.only(
@@ -212,7 +214,7 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                     ),
                   ),
                 // UP LEFT CORNER RESIZE GIZMO
-                if (!widget.isFreeze)
+                if (cleanGizmoLevel == 0 && !widget.isFreeze)
                   Center(
                     child: Padding(
                       padding: EdgeInsets.only(
@@ -254,7 +256,7 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                     ),
                   ),
                 // UP RIGHT CORNER ROTATE GIZMO
-                if (!widget.isFreeze)
+                if (cleanGizmoLevel == 0 && !widget.isFreeze)
                   Center(
                     child: Padding(
                       padding: EdgeInsets.only(
@@ -280,7 +282,7 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                     ),
                   ),
                 // UP RIGHT CORNER RESIZE GIZMO
-                if (!widget.isFreeze)
+                if (cleanGizmoLevel == 0 && !widget.isFreeze)
                   Center(
                     child: Padding(
                       padding: EdgeInsets.only(
@@ -320,7 +322,7 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                     ),
                   ),
                 // BOTTOM RIGHT CORNER ROTATE GIZMO
-                if (!widget.isFreeze)
+                if (cleanGizmoLevel == 0 && !widget.isFreeze)
                   Center(
                     child: Padding(
                       padding: EdgeInsets.only(
@@ -343,7 +345,7 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                     ),
                   ),
                 // BOTTOM RIGHT CORNER RESIZE GIZMO
-                if (!widget.isFreeze)
+                if (cleanGizmoLevel == 0 && !widget.isFreeze)
                   Center(
                     child: Padding(
                       padding: EdgeInsets.only(
@@ -384,7 +386,7 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                     ),
                   ),
                 // BOTTOM LEFT CORNER ROTATE GIZMO
-                if (!widget.isFreeze)
+                if (cleanGizmoLevel == 0 && !widget.isFreeze)
                   Center(
                     child: Padding(
                       padding: EdgeInsets.only(
@@ -407,7 +409,7 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                     ),
                   ),
                 // BOTTOM LEFT CORNER RESIZE GIZMO
-                if (!widget.isFreeze)
+                if (cleanGizmoLevel == 0 && !widget.isFreeze)
                   Center(
                     child: Padding(
                       padding: EdgeInsets.only(
