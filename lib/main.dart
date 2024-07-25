@@ -133,12 +133,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                                       title: 'Select',
                                       info: 'V',
                                       onTap: () {
-                                        if (ref.read(isFreezeProviderState)) {
-                                          ref
-                                              .read(isFreezeProviderState
-                                                  .notifier)
-                                              .state = false;
-                                        }
                                         return true;
                                       },
                                     ),
@@ -149,13 +143,14 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                                       info: 'Y',
                                       onTap: () {
                                         if (ref
+                                                    .read(canvasStateProvider)
+                                                    .selected ==
+                                                null ||
+                                            ref
                                                 .read(canvasStateProvider)
-                                                .selected ==
-                                            null) return false;
-                                        ref
-                                            .read(
-                                                isFreezeProviderState.notifier)
-                                            .state = true;
+                                                .selected is Artboard) {
+                                          return false;
+                                        }
                                         return true;
                                       },
                                     ),
@@ -168,6 +163,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                                       icon: Icons.border_style_outlined,
                                       title: 'Artboard',
                                       info: 'A',
+                                      onTap: () {
+                                        return true;
+                                      },
                                     ),
                                   ],
                                 ),

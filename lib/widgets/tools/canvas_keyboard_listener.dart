@@ -54,10 +54,9 @@ class _KeyboardListenerState extends ConsumerState<CanvasKeyboardListener> {
           }
           if (ref.read(canvasStateProvider).selected != null &&
               event.logicalKey == LogicalKeyboardKey.keyY) {
-            final f = ref.read(isFreezeProviderState);
+            final f = ref.read(activeToolStateProvider) == ToolCode.freeze;
             ref.read(activeToolStateProvider.notifier).state =
                 f ? ToolCode.select : ToolCode.freeze;
-            ref.read(isFreezeProviderState.notifier).state = !f;
 
             return KeyEventResult.handled;
           }

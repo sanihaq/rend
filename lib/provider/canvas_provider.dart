@@ -9,8 +9,6 @@ import 'package:rend/objects/base_object.dart';
 
 final cleanGizmosLevelProviderState = StateProvider<int>((ref) => 0);
 
-final isFreezeProviderState = StateProvider<bool>((ref) => false);
-
 final isShiftIsPressedStateProvider = StateProvider<bool>((ref) => false);
 final isAltIsPressedStateProvider = StateProvider<bool>((ref) => false);
 
@@ -22,13 +20,13 @@ class AppCanvasNotifier extends ChangeNotifier {
 
   AppCanvasNotifier(this._ref);
 
-  final List<Artboard> _boards = [];
+  final List<Artboard> _roots = [];
 
   BaseObject? _selected;
 
   BaseObject? get selected => _selected;
 
-  List<Artboard> get boards => _boards;
+  List<BaseObject> get roots => _roots;
 
   void selectObject(BaseObject? obj) {
     if (_selected == obj) return;
@@ -37,20 +35,20 @@ class AppCanvasNotifier extends ChangeNotifier {
   }
 
   int _getTheHighestId() {
-    return _boards.fold(0, (a, b) => a > b.id ? a : b.id);
+    return _roots.fold(0, (a, b) => a > b.id ? a : b.id);
   }
 
   Artboard? getBoardById(int id) {
-    return _boards.firstWhereOrNull((e) => e.id == id);
+    return _roots.firstWhereOrNull((e) => e.id == id);
   }
 
   int getBoardIndexById(int id) {
-    return _boards.indexWhere((e) => e.id == id);
+    return _roots.indexWhere((e) => e.id == id);
   }
 
   void addBoard(double width, double height) {
     final i = _getTheHighestId() + 1;
-    _boards.add(
+    _roots.add(
       Artboard.empty(id: i, name: 'Artboard $i', width: width, height: height),
     );
     notifyListeners();
@@ -73,12 +71,14 @@ class AppCanvasNotifier extends ChangeNotifier {
   }
 
   void updateStrokeWidth(BaseObject object, double width) {
+    if (object is Artboard) return;
     object.strokeWidth = width;
     notifyListeners();
     _cleanGizmoTimeout(2);
   }
 
   void updateStroke(BaseObject object, int index, Color color) {
+    if (object is Artboard) return;
     if (index > object.strokes.length - 1) return;
     object.strokes[index] = color;
     if (object.strokeWidth == 0) object.strokeWidth = 1;
@@ -109,6 +109,7 @@ class AppCanvasNotifier extends ChangeNotifier {
   }
 
   void updateOrigin(BaseObject object, Offset delta) {
+    if (object is Artboard) return;
     final x = (object.origin.dx + delta.dx);
     final y = (object.origin.dy + delta.dy);
     object.origin = Offset(x.roundToDouble(), y.roundToDouble());
@@ -243,11 +244,13 @@ class AppCanvasNotifier extends ChangeNotifier {
   }
 
   void updateRotation(BaseObject object, double value) {
+    if (object is Artboard) return;
     object.rotation = value;
     notifyListeners();
   }
 
   void updateRotationBy(BaseObject object, double valueBy) {
+    if (object is Artboard) return;
     object.rotation += valueBy;
     notifyListeners();
   }
@@ -262,14 +265,14 @@ class AppCanvasNotifier extends ChangeNotifier {
   bool removeBoardById(int id) {
     final index = getBoardIndexById(id);
     if (index == -1) return false;
-    _boards.removeAt(index);
+    _roots.removeAt(index);
     notifyListeners();
     return true;
   }
 
   bool deleteObject(Object obj) {
     bool result = false;
-    if (obj is Artboard) result = _boards.remove(obj);
+    if (obj is Artboard) result = _roots.remove(obj);
     notifyListeners();
     return result;
   }

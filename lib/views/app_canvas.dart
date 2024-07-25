@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rend/objects/art_board.dart';
+import 'package:rend/objects/base_object.dart';
 import 'package:rend/provider/canvas_provider.dart';
 import 'package:rend/views/create_artboard_dialog.dart';
 import 'package:rend/widgets/objects/rectangle_widget.dart';
@@ -29,27 +31,49 @@ class _AppCanvasState extends ConsumerState<AppCanvas> {
       isFreeze: widget.isFreeze,
       child: Stack(
         children: [
-          if (canvas.boards.isEmpty)
+          if (canvas.roots.isEmpty)
             const Center(child: CreateArtboardDialog())
           else
-            ...canvas.boards.map(
-              (board) => Center(
+            ...canvas.roots.map(
+              (obj) => Center(
                 child: Transform.translate(
-                  offset: board.position + board.origin,
+                  offset: obj.position + obj.origin,
                   child: Transform.rotate(
-                    angle: board.rotation * 3.14 / 180,
-                    origin: -board.origin,
-                    child: GestureDetector(
-                      onTap: widget.isFreeze
-                          ? null
-                          : () => canvas.selectObject(board),
-                      onPanUpdate: widget.isFreeze
-                          ? null
-                          : (d) {
-                              canvas.selectObject(board);
-                              canvas.updatePosition(board, d.delta);
-                            },
-                      child: RectangleWidget(object: board),
+                    angle: obj.rotation * 3.14 / 180,
+                    origin: -obj.origin,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 22.0),
+                      child: obj is Artboard
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                GestureDetector(
+                                  onTap: widget.isFreeze
+                                      ? null
+                                      : () => canvas.selectObject(obj),
+                                  onPanUpdate: widget.isFreeze
+                                      ? null
+                                      : (d) {
+                                          canvas.selectObject(obj);
+                                          canvas.updatePosition(obj, d.delta);
+                                        },
+                                  child: SizedBox(
+                                    width: obj.width,
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          obj.name,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                getObjectWidget(obj, canvas),
+                              ],
+                            )
+                          : getObjectWidget(obj, canvas),
                     ),
                   ),
                 ),
@@ -62,6 +86,21 @@ class _AppCanvasState extends ConsumerState<AppCanvas> {
             )
         ],
       ),
+    );
+  }
+
+  GestureDetector getObjectWidget(BaseObject obj, AppCanvasNotifier canvas) {
+    return GestureDetector(
+      onTap: widget.isFreeze || obj is Artboard
+          ? () {}
+          : () => canvas.selectObject(obj),
+      onPanUpdate: widget.isFreeze || obj is Artboard
+          ? null
+          : (d) {
+              canvas.selectObject(obj);
+              canvas.updatePosition(obj, d.delta);
+            },
+      child: RectangleWidget(object: obj),
     );
   }
 }

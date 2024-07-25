@@ -103,11 +103,11 @@ class _PopupMenuButtonState extends ConsumerState<AppPopupMenuButton> {
                             item: e,
                             isActive: activeTool == e.toolCode,
                             onTap: () {
+                              ref.read(appStackProvider.notifier).state = null;
                               final r = e.onTap?.call();
                               if (r == null || !r) return;
                               ref.read(activeToolStateProvider.notifier).state =
                                   e.toolCode;
-                              ref.read(appStackProvider.notifier).state = null;
                             },
                           ),
                         )

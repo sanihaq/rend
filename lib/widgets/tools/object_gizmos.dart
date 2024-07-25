@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rend/objects/art_board.dart';
 import 'package:rend/objects/base_object.dart';
 import 'package:rend/provider/canvas_provider.dart';
 import 'package:rend/theme/theme.dart';
@@ -50,8 +51,9 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                 if (cleanGizmoLevel <= 1)
                   Center(
                     child: GestureDetector(
+                      onTap: () {},
                       onPanUpdate: (d) {
-                        if (widget.isFreeze) {
+                        if (widget.isFreeze && widget.object is! Artboard) {
                           canvas.updateOrigin(widget.object, d.delta);
                         } else {
                           canvas.updatePosition(widget.object, d.delta);
@@ -77,6 +79,7 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                       child: MouseRegion(
                         cursor: SystemMouseCursors.resizeUp,
                         child: GestureDetector(
+                          onTap: () {},
                           onVerticalDragUpdate: (d) {
                             if (d.delta.dy < 0) {
                               canvas.updateHeight(
@@ -107,6 +110,7 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                       child: MouseRegion(
                         cursor: SystemMouseCursors.resizeDown,
                         child: GestureDetector(
+                          onTap: () {},
                           onVerticalDragUpdate: (d) {
                             if (d.delta.dy > 0) {
                               canvas.updateHeight(
@@ -137,6 +141,7 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                       child: MouseRegion(
                         cursor: SystemMouseCursors.resizeLeft,
                         child: GestureDetector(
+                          onTap: () {},
                           onHorizontalDragUpdate: (d) {
                             if (d.delta.dx < 0) {
                               canvas.updateWidth(
@@ -167,6 +172,7 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                       child: MouseRegion(
                         cursor: SystemMouseCursors.resizeRight,
                         child: GestureDetector(
+                          onTap: () {},
                           onHorizontalDragUpdate: (d) {
                             if (d.delta.dx > 0) {
                               canvas.updateWidth(
@@ -191,7 +197,9 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                     ),
                   ),
                 // UP LEFT CORNER ROTATE GIZMO
-                if (cleanGizmoLevel == 0 && !widget.isFreeze)
+                if (widget.object is! Artboard &&
+                    cleanGizmoLevel == 0 &&
+                    !widget.isFreeze)
                   Center(
                     child: Padding(
                       padding: EdgeInsets.only(
@@ -200,6 +208,7 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                       child: MouseRegion(
                         cursor: SystemMouseCursors.grab,
                         child: GestureDetector(
+                          onTap: () {},
                           onPanUpdate: (d) {
                             canvas.updateRotationBy(widget.object, -d.delta.dy);
                           },
@@ -223,6 +232,7 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                       child: MouseRegion(
                         cursor: SystemMouseCursors.resizeUpLeft,
                         child: GestureDetector(
+                          onTap: () {},
                           onPanUpdate: (d) {
                             if (d.delta.dx < 0) {
                               canvas.updateWidthHeight(
@@ -256,7 +266,9 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                     ),
                   ),
                 // UP RIGHT CORNER ROTATE GIZMO
-                if (cleanGizmoLevel == 0 && !widget.isFreeze)
+                if (widget.object is! Artboard &&
+                    cleanGizmoLevel == 0 &&
+                    !widget.isFreeze)
                   Center(
                     child: Padding(
                       padding: EdgeInsets.only(
@@ -265,6 +277,7 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                       child: MouseRegion(
                         cursor: SystemMouseCursors.grab,
                         child: GestureDetector(
+                          onTap: () {},
                           onPanUpdate: (d) {
                             final v = d.delta.dx.abs() > d.delta.dy.abs()
                                 ? d.delta.dx
@@ -291,6 +304,7 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                       child: MouseRegion(
                         cursor: SystemMouseCursors.resizeUpLeft,
                         child: GestureDetector(
+                          onTap: () {},
                           onPanUpdate: (d) {
                             if (d.delta.dx < 0) {
                               canvas.updateWidthHeight(
@@ -322,7 +336,9 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                     ),
                   ),
                 // BOTTOM RIGHT CORNER ROTATE GIZMO
-                if (cleanGizmoLevel == 0 && !widget.isFreeze)
+                if (widget.object is! Artboard &&
+                    cleanGizmoLevel == 0 &&
+                    !widget.isFreeze)
                   Center(
                     child: Padding(
                       padding: EdgeInsets.only(
@@ -331,6 +347,7 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                       child: MouseRegion(
                         cursor: SystemMouseCursors.grab,
                         child: GestureDetector(
+                          onTap: () {},
                           onPanUpdate: (d) {
                             canvas.updateRotationBy(widget.object, d.delta.dy);
                           },
@@ -353,6 +370,7 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                       child: MouseRegion(
                         cursor: SystemMouseCursors.resizeUpLeft,
                         child: GestureDetector(
+                          onTap: () {},
                           onPanUpdate: (d) {
                             if (d.delta.dx < 0) {
                               canvas.updateWidthHeight(
@@ -386,7 +404,9 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                     ),
                   ),
                 // BOTTOM LEFT CORNER ROTATE GIZMO
-                if (cleanGizmoLevel == 0 && !widget.isFreeze)
+                if (widget.object is! Artboard &&
+                    cleanGizmoLevel == 0 &&
+                    !widget.isFreeze)
                   Center(
                     child: Padding(
                       padding: EdgeInsets.only(
@@ -395,6 +415,7 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                       child: MouseRegion(
                         cursor: SystemMouseCursors.grab,
                         child: GestureDetector(
+                          onTap: () {},
                           onPanUpdate: (d) {
                             canvas.updateRotationBy(widget.object, -d.delta.dy);
                           },
@@ -418,6 +439,7 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                       child: MouseRegion(
                         cursor: SystemMouseCursors.resizeUpLeft,
                         child: GestureDetector(
+                          onTap: () {},
                           onPanUpdate: (d) {
                             if (d.delta.dx < 0) {
                               canvas.updateWidthHeight(
@@ -454,28 +476,28 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
             ),
           ),
         ),
-        Transform.translate(
-          offset: widget.object.position,
-          child: Center(
-            child: GestureDetector(
-              onPanUpdate: (d) {
-                // canvas.updateOrigin(widget.object, d.delta);
-              },
-              child: Container(
-                width: 10,
-                height: 10,
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  border: Border.all(
-                    width: 1.4,
-                    color: Colors.white,
-                    strokeAlign: BorderSide.strokeAlignInside,
+        if (widget.object is! Artboard)
+          Transform.translate(
+            offset: widget.object.position,
+            child: Center(
+              child: GestureDetector(
+                onTap: () {},
+                onPanUpdate: (d) {},
+                child: Container(
+                  width: 10,
+                  height: 10,
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    border: Border.all(
+                      width: 1.4,
+                      color: Colors.white,
+                      strokeAlign: BorderSide.strokeAlignInside,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        )
+          )
       ],
     );
   }

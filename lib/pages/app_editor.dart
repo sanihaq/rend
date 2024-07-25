@@ -37,11 +37,10 @@ class AppEditor extends ConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 2.0),
                 child: Consumer(builder: (context, ref, _) {
-                  final isFreeze = ref.watch(isFreezeProviderState);
+                  final activeTool = ref.watch(activeToolStateProvider);
                   return GestureDetector(
                     onTap: () {
-                      if (isFreeze) {
-                        ref.read(isFreezeProviderState.notifier).state = false;
+                      if (activeTool == ToolCode.freeze) {
                         ref.read(activeToolStateProvider.notifier).state =
                             ToolCode.select;
                       } else {
@@ -55,7 +54,7 @@ class AppEditor extends ConsumerWidget {
                           Radius.circular(4),
                         ),
                         border: Border.all(
-                          color: isFreeze
+                          color: activeTool == ToolCode.freeze
                               ? colors(context).color9 ?? Colors.transparent
                               : Colors.transparent,
                           width: 1,
@@ -63,7 +62,7 @@ class AppEditor extends ConsumerWidget {
                         ),
                       ),
                       clipBehavior: Clip.hardEdge,
-                      child: AppCanvas(isFreeze: isFreeze),
+                      child: AppCanvas(isFreeze: activeTool == ToolCode.freeze),
                     ),
                   );
                 }),
