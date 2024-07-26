@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rend/objects/art_board.dart';
 import 'package:rend/objects/base_object.dart';
+import 'package:rend/provider/app_provider.dart';
 import 'package:rend/provider/canvas_provider.dart';
 import 'package:rend/theme/theme.dart';
+import 'package:rend/widgets/popup_button.dart';
 
 class SelectGizmos extends ConsumerStatefulWidget {
   const SelectGizmos(
@@ -56,7 +58,13 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                         if (widget.isFreeze && widget.object is! Artboard) {
                           canvas.updateOrigin(widget.object, d.delta);
                         } else {
-                          canvas.updatePosition(widget.object, d.delta);
+                          if (ref.read(activeToolStateProvider) ==
+                              ToolCode.select) {
+                            canvas.updatePosition(widget.object, d.delta);
+                          } else if (ref.read(activeToolStateProvider) ==
+                              ToolCode.artboard) {
+                            print(d.globalPosition);
+                          }
                         }
                       },
                       child: Container(

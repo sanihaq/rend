@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rend/objects/art_board.dart';
 import 'package:rend/provider/app_provider.dart';
 import 'package:rend/provider/canvas_provider.dart';
 import 'package:rend/widgets/popup_button.dart';
@@ -31,7 +32,6 @@ class _KeyboardListenerState extends ConsumerState<CanvasKeyboardListener> {
       autofocus: true,
       onKeyEvent: (focus, event) {
         if (widget.isFreeze) return KeyEventResult.ignored;
-        // print(event.logicalKey);
         if (event is KeyDownEvent) {
           if (Platform.isMacOS &&
                   event.logicalKey == LogicalKeyboardKey.backspace ||
@@ -53,11 +53,26 @@ class _KeyboardListenerState extends ConsumerState<CanvasKeyboardListener> {
             return KeyEventResult.handled;
           }
           if (ref.read(canvasStateProvider).selected != null &&
+              ref.read(canvasStateProvider).selected is! Artboard &&
               event.logicalKey == LogicalKeyboardKey.keyY) {
             final f = ref.read(activeToolStateProvider) == ToolCode.freeze;
             ref.read(activeToolStateProvider.notifier).state =
                 f ? ToolCode.select : ToolCode.freeze;
 
+            return KeyEventResult.handled;
+          }
+          if (event.logicalKey == LogicalKeyboardKey.keyV) {
+            if (ref.read(activeToolStateProvider) != ToolCode.select) {
+              ref.read(activeToolStateProvider.notifier).state =
+                  ToolCode.select;
+            }
+            return KeyEventResult.handled;
+          }
+          if (event.logicalKey == LogicalKeyboardKey.keyA) {
+            if (ref.read(activeToolStateProvider) != ToolCode.artboard) {
+              ref.read(activeToolStateProvider.notifier).state =
+                  ToolCode.artboard;
+            }
             return KeyEventResult.handled;
           }
         }

@@ -92,7 +92,9 @@ class _CreateArtboardDialogState extends State<CreateArtboardDialog> {
               text: 'Create artboard',
               onTap: () {
                 if (_width != null && _height != null) {
-                  ref.read(canvasStateProvider).addBoard(_width!, _height!);
+                  ref.read(canvasStateProvider).addRoot(ref
+                      .read(canvasStateProvider)
+                      .getNewArtBoard(_width!, _height!));
                 }
               },
             );

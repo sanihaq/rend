@@ -20,7 +20,7 @@ class AppCanvasNotifier extends ChangeNotifier {
 
   AppCanvasNotifier(this._ref);
 
-  final List<Artboard> _roots = [];
+  final List<BaseObject> _roots = [];
 
   BaseObject? _selected;
 
@@ -34,11 +34,11 @@ class AppCanvasNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  int _getTheHighestId() {
+  int _getRootsHighestId() {
     return _roots.fold(0, (a, b) => a > b.id ? a : b.id);
   }
 
-  Artboard? getBoardById(int id) {
+  BaseObject? getBoardById(int id) {
     return _roots.firstWhereOrNull((e) => e.id == id);
   }
 
@@ -46,11 +46,22 @@ class AppCanvasNotifier extends ChangeNotifier {
     return _roots.indexWhere((e) => e.id == id);
   }
 
-  void addBoard(double width, double height) {
-    final i = _getTheHighestId() + 1;
-    _roots.add(
-      Artboard.empty(id: i, name: 'Artboard $i', width: width, height: height),
-    );
+  Artboard getNewArtBoard(double width, double height) {
+    final i = _getRootsHighestId() + 1;
+    return Artboard.empty(
+        id: i, name: 'Artboard $i', width: width, height: height);
+  }
+
+  void addRoot(BaseObject object) {
+    _roots.add(object);
+    notifyListeners();
+  }
+
+  void addObjectWithDrag(BaseObject object, Offset delta) {
+    final s = Offset(delta.dx.roundToDouble(), delta.dy.roundToDouble());
+    object.position += Offset((s.dx / 2), s.dy / 2);
+    object.width += s.dx;
+    object.height += s.dy;
     notifyListeners();
   }
 
@@ -275,5 +286,12 @@ class AppCanvasNotifier extends ChangeNotifier {
     if (obj is Artboard) result = _roots.remove(obj);
     notifyListeners();
     return result;
+  }
+
+  void panCanvas(Offset delta) {
+    for (var object in _roots) {
+      object.position += delta;
+    }
+    notifyListeners();
   }
 }

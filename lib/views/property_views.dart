@@ -145,11 +145,25 @@ class _ColorStrokeState extends ConsumerState<ColorStrokeProperty> {
                       ],
                     );
                   },
-                  child: Container(
-                    key: buttonKey,
+                  child: SizedBox(
                     width: 20,
                     height: 20,
-                    color: selected.strokes.firstOrNull ?? Colors.transparent,
+                    child: Stack(
+                      children: [
+                        Container(
+                          key: buttonKey,
+                          color: selected.strokes.firstOrNull ??
+                              Colors.transparent,
+                        ),
+                        Center(
+                          child: Container(
+                            width: 12,
+                            height: 12,
+                            color: colors(context).color1,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(width: 8),

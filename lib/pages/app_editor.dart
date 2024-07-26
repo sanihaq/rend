@@ -1,5 +1,7 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rend/objects/base_object.dart';
 import 'package:rend/provider/app_provider.dart';
 import 'package:rend/provider/canvas_provider.dart';
 import 'package:rend/theme/theme.dart';
@@ -38,31 +40,72 @@ class AppEditor extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 2.0),
                 child: Consumer(builder: (context, ref, _) {
                   final activeTool = ref.watch(activeToolStateProvider);
-                  return GestureDetector(
-                    onTap: () {
-                      if (activeTool == ToolCode.freeze) {
-                        ref.read(activeToolStateProvider.notifier).state =
-                            ToolCode.select;
-                      } else {
-                        canvas.selectObject(null);
-                      }
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(4),
-                        ),
-                        border: Border.all(
-                          color: activeTool == ToolCode.freeze
-                              ? colors(context).color9 ?? Colors.transparent
-                              : Colors.transparent,
-                          width: 1,
-                          strokeAlign: BorderSide.strokeAlignInside,
+                  bool isMiddleMouse = false;
+                  BaseObject? dragObj;
+                  return MouseRegion(
+                    cursor: activeTool == ToolCode.artboard
+                        ? SystemMouseCursors.precise
+                        : SystemMouseCursors.basic,
+                    child: Listener(
+                      onPointerDown: (e) {
+                        if (e.kind == PointerDeviceKind.mouse &&
+                            e.buttons == kMiddleMouseButton) {
+                          isMiddleMouse = true;
+                        }
+                      },
+                      onPointerUp: (e) {
+                        if (isMiddleMouse) {
+                          isMiddleMouse = false;
+                        }
+                      },
+                      onPointerMove: (e) {
+                        if (isMiddleMouse) {
+                          canvas.panCanvas(e.delta);
+                        }
+                      },
+                      child: GestureDetector(
+                        onTap: () {
+                          if (activeTool != ToolCode.select) {
+                            ref.read(activeToolStateProvider.notifier).state =
+                                ToolCode.select;
+                          } else {
+                            canvas.selectObject(null);
+                          }
+                        },
+                        onPanUpdate: (d) {
+                          if (activeTool == ToolCode.select) return;
+                          final wasNull = dragObj == null;
+                          dragObj ??= canvas.getNewArtBoard(0, 0)
+                            ..position =
+                                d.globalPosition - AppCanvas.getCenterPoint();
+                          if (wasNull) canvas.addRoot(dragObj!);
+                          canvas.selectObject(dragObj!);
+                          canvas.addObjectWithDrag(dragObj!, d.delta);
+                        },
+                        onPanEnd: (_) {
+                          dragObj = null;
+                          ref.read(activeToolStateProvider.notifier).state =
+                              ToolCode.select;
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).scaffoldBackgroundColor,
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(4),
+                            ),
+                            border: Border.all(
+                              color: activeTool == ToolCode.freeze
+                                  ? colors(context).color9 ?? Colors.transparent
+                                  : Colors.transparent,
+                              width: 1,
+                              strokeAlign: BorderSide.strokeAlignInside,
+                            ),
+                          ),
+                          clipBehavior: Clip.hardEdge,
+                          child: AppCanvas(
+                              isFreeze: activeTool == ToolCode.freeze),
                         ),
                       ),
-                      clipBehavior: Clip.hardEdge,
-                      child: AppCanvas(isFreeze: activeTool == ToolCode.freeze),
                     ),
                   );
                 }),

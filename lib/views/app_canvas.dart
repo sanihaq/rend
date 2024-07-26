@@ -2,14 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rend/objects/art_board.dart';
 import 'package:rend/objects/base_object.dart';
+import 'package:rend/provider/app_provider.dart';
 import 'package:rend/provider/canvas_provider.dart';
 import 'package:rend/views/create_artboard_dialog.dart';
 import 'package:rend/widgets/objects/rectangle_widget.dart';
+import 'package:rend/widgets/popup_button.dart';
 import 'package:rend/widgets/tools/canvas_keyboard_listener.dart';
 import 'package:rend/widgets/tools/object_gizmos.dart';
 
 class AppCanvas extends ConsumerStatefulWidget {
   const AppCanvas({super.key, required this.isFreeze});
+
+  static final GlobalKey centerPointKey = GlobalKey();
+
+  static Offset getCenterPoint() {
+    RenderBox renderBox = AppCanvas.centerPointKey.currentContext!
+        .findRenderObject() as RenderBox;
+    return renderBox.localToGlobal(Offset.zero);
+  }
 
   final bool isFreeze;
 
@@ -31,6 +41,13 @@ class _AppCanvasState extends ConsumerState<AppCanvas> {
       isFreeze: widget.isFreeze,
       child: Stack(
         children: [
+          Center(
+            child: SizedBox(
+              key: AppCanvas.centerPointKey,
+              width: 10,
+              height: 10,
+            ),
+          ),
           if (canvas.roots.isEmpty)
             const Center(child: CreateArtboardDialog())
           else
@@ -51,12 +68,27 @@ class _AppCanvasState extends ConsumerState<AppCanvas> {
                                 GestureDetector(
                                   onTap: widget.isFreeze
                                       ? null
-                                      : () => canvas.selectObject(obj),
+                                      : () {
+                                          if (ref.read(
+                                                  activeToolStateProvider) ==
+                                              ToolCode.select) {
+                                            canvas.selectObject(obj);
+                                          } else {
+                                            ref
+                                                .read(activeToolStateProvider
+                                                    .notifier)
+                                                .state = ToolCode.select;
+                                          }
+                                        },
                                   onPanUpdate: widget.isFreeze
                                       ? null
                                       : (d) {
-                                          canvas.selectObject(obj);
-                                          canvas.updatePosition(obj, d.delta);
+                                          if (ref.read(
+                                                  activeToolStateProvider) ==
+                                              ToolCode.select) {
+                                            canvas.selectObject(obj);
+                                            canvas.updatePosition(obj, d.delta);
+                                          }
                                         },
                                   child: SizedBox(
                                     width: obj.width,
@@ -83,23 +115,46 @@ class _AppCanvasState extends ConsumerState<AppCanvas> {
             SelectGizmos(
               object: canvas.selected!,
               isFreeze: widget.isFreeze,
-            )
+            ),
         ],
       ),
     );
   }
 
   GestureDetector getObjectWidget(BaseObject obj, AppCanvasNotifier canvas) {
+    BaseObject? dragObj;
     return GestureDetector(
       onTap: widget.isFreeze || obj is Artboard
-          ? () {}
-          : () => canvas.selectObject(obj),
-      onPanUpdate: widget.isFreeze || obj is Artboard
+          ? () {
+              if (ref.read(activeToolStateProvider) != ToolCode.select) {
+                ref.read(activeToolStateProvider.notifier).state =
+                    ToolCode.select;
+              }
+            }
+          : () {
+              if (ref.read(activeToolStateProvider) == ToolCode.select) {
+                canvas.selectObject(obj);
+              } else {
+                ref.read(activeToolStateProvider.notifier).state =
+                    ToolCode.select;
+              }
+            },
+      onPanUpdate: widget.isFreeze
           ? null
           : (d) {
-              canvas.selectObject(obj);
-              canvas.updatePosition(obj, d.delta);
+              if (ref.read(activeToolStateProvider) == ToolCode.select &&
+                  obj is! Artboard) {
+                canvas.selectObject(obj);
+                canvas.updatePosition(obj, d.delta);
+              } else if (ref.read(activeToolStateProvider) ==
+                  ToolCode.artboard) {
+                dragObj ??= canvas.getNewArtBoard(0, 0);
+                canvas.addObjectWithDrag(dragObj!, d.globalPosition);
+              }
             },
+      onPanEnd: (_) {
+        dragObj = null;
+      },
       child: RectangleWidget(object: obj),
     );
   }
