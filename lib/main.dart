@@ -183,6 +183,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                                       icon: Icons.check_box_outline_blank,
                                       title: 'Rectangle',
                                       info: 'R',
+                                      onTap: () {
+                                        return true;
+                                      },
                                     ),
                                     AppPopupMenuItem(
                                       toolCode: ToolCode.ellipse,

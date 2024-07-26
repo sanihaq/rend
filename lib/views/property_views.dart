@@ -109,6 +109,7 @@ class _ColorStrokeState extends ConsumerState<ColorStrokeProperty> {
                           onTap: () {
                             ref.read(appStackProvider.notifier).state = null;
                           },
+                          behavior: HitTestBehavior.translucent,
                           child: Container(
                             color: Colors.transparent,
                           ),
@@ -226,6 +227,7 @@ class _ColorFillState extends ConsumerState<ColorFillProperty> {
                           onTap: () {
                             ref.read(appStackProvider.notifier).state = null;
                           },
+                          behavior: HitTestBehavior.translucent,
                           child: Container(
                             color: Colors.transparent,
                           ),

@@ -31,7 +31,11 @@ class _KeyboardListenerState extends ConsumerState<CanvasKeyboardListener> {
     return Focus(
       autofocus: true,
       onKeyEvent: (focus, event) {
-        if (widget.isFreeze) return KeyEventResult.ignored;
+        if (widget.isFreeze &&
+            event.logicalKey != LogicalKeyboardKey.keyY &&
+            event.logicalKey != LogicalKeyboardKey.keyV) {
+          return KeyEventResult.ignored;
+        }
         if (event is KeyDownEvent) {
           // print(event.logicalKey);
           if (Platform.isMacOS &&
@@ -88,6 +92,13 @@ class _KeyboardListenerState extends ConsumerState<CanvasKeyboardListener> {
             if (ref.read(activeToolStateProvider) != ToolCode.artboard) {
               ref.read(activeToolStateProvider.notifier).state =
                   ToolCode.artboard;
+            }
+            return KeyEventResult.handled;
+          }
+          if (event.logicalKey == LogicalKeyboardKey.keyR) {
+            if (ref.read(activeToolStateProvider) != ToolCode.artboard) {
+              ref.read(activeToolStateProvider.notifier).state =
+                  ToolCode.rectangle;
             }
             return KeyEventResult.handled;
           }

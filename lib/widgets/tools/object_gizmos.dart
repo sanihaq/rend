@@ -63,6 +63,7 @@ class _SelectGizmosState extends ConsumerState<SelectGizmos> {
                         child: DeferPointer(
                           child: GestureDetector(
                             onTap: () {},
+                            behavior: HitTestBehavior.translucent,
                             onPanUpdate: (d) {
                               if (widget.isFreeze &&
                                   widget.object is! Artboard) {

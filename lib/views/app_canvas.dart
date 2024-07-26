@@ -68,10 +68,11 @@ class _AppCanvasState extends ConsumerState<AppCanvas> {
                           minHeight: 0.0,
                           maxHeight: double.infinity,
                           child: DeferPointer(
-                            child: Padding(
-                              padding: const EdgeInsets.only(bottom: 22.0),
-                              child: obj is Artboard
-                                  ? Column(
+                            child: obj is Artboard
+                                ? Padding(
+                                    padding:
+                                        const EdgeInsets.only(bottom: 22.0),
+                                    child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       crossAxisAlignment:
@@ -123,9 +124,9 @@ class _AppCanvasState extends ConsumerState<AppCanvas> {
                                         const SizedBox(height: 2),
                                         getObjectWidget(obj, canvas),
                                       ],
-                                    )
-                                  : getObjectWidget(obj, canvas),
-                            ),
+                                    ),
+                                  )
+                                : getObjectWidget(obj, canvas),
                           ),
                         ),
                       ),

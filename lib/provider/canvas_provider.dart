@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rend/objects/art_board.dart';
 import 'package:rend/objects/base_object.dart';
+import 'package:rend/objects/rectangle.dart';
 
 final cleanGizmosLevelProviderState = StateProvider<int>((ref) => 0);
 
@@ -57,6 +58,12 @@ class AppCanvasNotifier extends ChangeNotifier {
   Artboard getNewArtBoard(double width, double height) {
     final i = _getRootsHighestId() + 1;
     return Artboard.empty(
+        id: i, name: 'Artboard $i', width: width, height: height);
+  }
+
+  Rectangle getNewRectangle(double width, double height) {
+    final i = _getRootsHighestId() + 1;
+    return Rectangle.empty(
         id: i, name: 'Artboard $i', width: width, height: height);
   }
 
@@ -130,6 +137,7 @@ class AppCanvasNotifier extends ChangeNotifier {
 
   void updateOrigin(BaseObject object, Offset delta) {
     if (object is Artboard) return;
+    delta = delta * _zoom;
     final x = (object.origin.dx + delta.dx);
     final y = (object.origin.dy + delta.dy);
     object.origin = Offset(x.roundToDouble(), y.roundToDouble());
@@ -294,7 +302,7 @@ class AppCanvasNotifier extends ChangeNotifier {
 
   bool deleteObject(Object obj) {
     bool result = false;
-    if (obj is Artboard) result = _roots.remove(obj);
+    if (_roots.contains(obj)) result = _roots.remove(obj);
     notifyListeners();
     return result;
   }

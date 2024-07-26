@@ -81,7 +81,9 @@ class AppEditor extends ConsumerWidget {
                         onPanUpdate: (d) {
                           if (activeTool == ToolCode.select) return;
                           final wasNull = dragObj == null;
-                          dragObj ??= canvas.getNewArtBoard(0, 0)
+                          dragObj ??= (activeTool == ToolCode.rectangle
+                              ? canvas.getNewRectangle(0, 0)
+                              : canvas.getNewArtBoard(0, 0))
                             ..position =
                                 d.globalPosition - AppCanvas.getCenterPoint();
                           if (wasNull) canvas.addRoot(dragObj!);
