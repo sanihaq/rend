@@ -33,6 +33,7 @@ class _KeyboardListenerState extends ConsumerState<CanvasKeyboardListener> {
       onKeyEvent: (focus, event) {
         if (widget.isFreeze) return KeyEventResult.ignored;
         if (event is KeyDownEvent) {
+          // print(event.logicalKey);
           if (Platform.isMacOS &&
                   event.logicalKey == LogicalKeyboardKey.backspace ||
               event.logicalKey == LogicalKeyboardKey.delete) {
@@ -41,6 +42,16 @@ class _KeyboardListenerState extends ConsumerState<CanvasKeyboardListener> {
               canvas.selectObject(null);
               return KeyEventResult.handled;
             }
+          }
+          if (event.logicalKey == LogicalKeyboardKey.metaLeft ||
+              event.logicalKey == LogicalKeyboardKey.metaRight) {
+            ref.read(isMetaIsPressedStateProvider.notifier).state = true;
+            return KeyEventResult.handled;
+          }
+          if (event.logicalKey == LogicalKeyboardKey.controlLeft ||
+              event.logicalKey == LogicalKeyboardKey.controlRight) {
+            ref.read(isCtrlIsPressedStateProvider.notifier).state = true;
+            return KeyEventResult.handled;
           }
           if (event.logicalKey == LogicalKeyboardKey.shiftLeft ||
               event.logicalKey == LogicalKeyboardKey.shiftRight) {
@@ -61,6 +72,11 @@ class _KeyboardListenerState extends ConsumerState<CanvasKeyboardListener> {
 
             return KeyEventResult.handled;
           }
+          if (ref.read(isMetaIsPressedStateProvider) &&
+              event.logicalKey == LogicalKeyboardKey.digit0) {
+            canvas.resetZoom();
+            return KeyEventResult.handled;
+          }
           if (event.logicalKey == LogicalKeyboardKey.keyV) {
             if (ref.read(activeToolStateProvider) != ToolCode.select) {
               ref.read(activeToolStateProvider.notifier).state =
@@ -78,6 +94,16 @@ class _KeyboardListenerState extends ConsumerState<CanvasKeyboardListener> {
         }
 
         if (event is KeyUpEvent) {
+          if (event.logicalKey == LogicalKeyboardKey.metaLeft ||
+              event.logicalKey == LogicalKeyboardKey.metaRight) {
+            ref.read(isMetaIsPressedStateProvider.notifier).state = false;
+            return KeyEventResult.handled;
+          }
+          if (event.logicalKey == LogicalKeyboardKey.controlLeft ||
+              event.logicalKey == LogicalKeyboardKey.controlRight) {
+            ref.read(isCtrlIsPressedStateProvider.notifier).state = true;
+            return KeyEventResult.handled;
+          }
           if (event.logicalKey == LogicalKeyboardKey.shiftLeft ||
               event.logicalKey == LogicalKeyboardKey.shiftRight) {
             ref.read(isShiftIsPressedStateProvider.notifier).state = false;

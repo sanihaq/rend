@@ -1,3 +1,4 @@
+import 'package:defer_pointer/defer_pointer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rend/objects/art_board.dart';
@@ -39,84 +40,107 @@ class _AppCanvasState extends ConsumerState<AppCanvas> {
 
     return CanvasKeyboardListener(
       isFreeze: widget.isFreeze,
-      child: Stack(
-        children: [
-          Center(
-            child: SizedBox(
-              key: AppCanvas.centerPointKey,
-              width: 10,
-              height: 10,
+      child: DeferredPointerHandler(
+        child: Stack(
+          children: [
+            Center(
+              child: SizedBox(
+                key: AppCanvas.centerPointKey,
+                width: 10,
+                height: 10,
+              ),
             ),
-          ),
-          if (canvas.roots.isEmpty)
-            const Center(child: CreateArtboardDialog())
-          else
-            ...canvas.roots.map(
-              (obj) => Center(
-                child: Transform.translate(
-                  offset: obj.position + obj.origin,
-                  child: Transform.rotate(
-                    angle: obj.rotation * 3.14 / 180,
-                    origin: -obj.origin,
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 22.0),
-                      child: obj is Artboard
-                          ? Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                GestureDetector(
-                                  onTap: widget.isFreeze
-                                      ? null
-                                      : () {
-                                          if (ref.read(
-                                                  activeToolStateProvider) ==
-                                              ToolCode.select) {
-                                            canvas.selectObject(obj);
-                                          } else {
-                                            ref
-                                                .read(activeToolStateProvider
-                                                    .notifier)
-                                                .state = ToolCode.select;
-                                          }
-                                        },
-                                  onPanUpdate: widget.isFreeze
-                                      ? null
-                                      : (d) {
-                                          if (ref.read(
-                                                  activeToolStateProvider) ==
-                                              ToolCode.select) {
-                                            canvas.selectObject(obj);
-                                            canvas.updatePosition(obj, d.delta);
-                                          }
-                                        },
-                                  child: SizedBox(
-                                    width: obj.width,
-                                    child: Row(
+            if (canvas.roots.isEmpty)
+              const Center(child: CreateArtboardDialog())
+            else
+              ...canvas.roots.map(
+                (obj) => Center(
+                  child: Transform.translate(
+                    offset: obj.position + obj.origin,
+                    child: Transform.rotate(
+                      angle: obj.rotation * 3.14 / 180,
+                      origin: -obj.origin,
+                      child: Transform.scale(
+                        scale: canvas.zoom,
+                        child: OverflowBox(
+                          minWidth: 0.0,
+                          maxWidth: double.infinity,
+                          minHeight: 0.0,
+                          maxHeight: double.infinity,
+                          child: DeferPointer(
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 22.0),
+                              child: obj is Artboard
+                                  ? Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          obj.name,
+                                        GestureDetector(
+                                          onTap: widget.isFreeze
+                                              ? null
+                                              : () {
+                                                  if (ref.read(
+                                                          activeToolStateProvider) ==
+                                                      ToolCode.select) {
+                                                    canvas.selectObject(obj);
+                                                  } else {
+                                                    ref
+                                                        .read(
+                                                            activeToolStateProvider
+                                                                .notifier)
+                                                        .state = ToolCode.select;
+                                                  }
+                                                },
+                                          onPanUpdate: widget.isFreeze
+                                              ? null
+                                              : (d) {
+                                                  if (ref.read(
+                                                          activeToolStateProvider) ==
+                                                      ToolCode.select) {
+                                                    canvas.selectObject(obj);
+                                                    canvas.updatePosition(
+                                                        obj, d.delta);
+                                                  }
+                                                },
+                                          child: SizedBox(
+                                            width: obj.width,
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                  child: Text(
+                                                    obj.name,
+                                                    overflow:
+                                                        TextOverflow.visible,
+                                                    softWrap: false,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
                                         ),
+                                        const SizedBox(height: 2),
+                                        getObjectWidget(obj, canvas),
                                       ],
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 2),
-                                getObjectWidget(obj, canvas),
-                              ],
-                            )
-                          : getObjectWidget(obj, canvas),
+                                    )
+                                  : getObjectWidget(obj, canvas),
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          if (canvas.selected != null)
-            SelectGizmos(
-              object: canvas.selected!,
-              isFreeze: widget.isFreeze,
-            ),
-        ],
+            if (canvas.selected != null)
+              SelectGizmos(
+                object: canvas.selected!,
+                isFreeze: widget.isFreeze,
+              ),
+            Text('zoom: ${canvas.zoom.toStringAsFixed(1)}'),
+          ],
+        ),
       ),
     );
   }

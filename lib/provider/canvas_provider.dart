@@ -9,6 +9,8 @@ import 'package:rend/objects/base_object.dart';
 
 final cleanGizmosLevelProviderState = StateProvider<int>((ref) => 0);
 
+final isMetaIsPressedStateProvider = StateProvider<bool>((ref) => false);
+final isCtrlIsPressedStateProvider = StateProvider<bool>((ref) => false);
 final isShiftIsPressedStateProvider = StateProvider<bool>((ref) => false);
 final isAltIsPressedStateProvider = StateProvider<bool>((ref) => false);
 
@@ -23,6 +25,12 @@ class AppCanvasNotifier extends ChangeNotifier {
   final List<BaseObject> _roots = [];
 
   BaseObject? _selected;
+
+  double _zoom = 1;
+  final double _minZoom = 0.1;
+  final double _maxZoom = 100;
+
+  double get zoom => _zoom;
 
   BaseObject? get selected => _selected;
 
@@ -105,6 +113,7 @@ class AppCanvasNotifier extends ChangeNotifier {
   }
 
   void updatePosition(BaseObject object, Offset delta) {
+    delta = delta * _zoom;
     final isShift = _ref.read(isShiftIsPressedStateProvider);
     final radians = object.rotation * (math.pi / 180.0);
     final cos = math.cos(radians);
@@ -152,6 +161,7 @@ class AppCanvasNotifier extends ChangeNotifier {
   }
 
   void _updateHeight(BaseObject object, double deltaY, bool reverse) {
+    deltaY = deltaY * _zoom;
     bool flipReset = false;
     double newH = object.height + deltaY;
     if (_isFlipped || newH <= 0) {
@@ -206,6 +216,7 @@ class AppCanvasNotifier extends ChangeNotifier {
   }
 
   void _updateWidth(BaseObject object, double deltaX, bool reverse) {
+    deltaX = deltaX * _zoom;
     bool flipReset = false;
     double newW = object.width + deltaX;
     if (_isFlipped || newW <= 0) {
@@ -286,6 +297,29 @@ class AppCanvasNotifier extends ChangeNotifier {
     if (obj is Artboard) result = _roots.remove(obj);
     notifyListeners();
     return result;
+  }
+
+  void resetZoom() {
+    _zoom = 1.0;
+    notifyListeners();
+  }
+
+  void setZoom(double zoom) {
+    _zoom = zoom;
+    _zoom = _zoom.clamp(_minZoom, _maxZoom);
+    notifyListeners();
+  }
+
+  void zoomCanvas(bool isUp) {
+    if (isUp) {
+      if (_zoom <= _minZoom) return;
+      _zoom -= 0.1;
+    } else {
+      if (_zoom >= _maxZoom) return;
+      _zoom += 0.1;
+    }
+    _zoom = _zoom.clamp(_minZoom, _maxZoom);
+    notifyListeners();
   }
 
   void panCanvas(Offset delta) {

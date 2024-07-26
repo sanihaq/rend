@@ -63,6 +63,12 @@ class AppEditor extends ConsumerWidget {
                           canvas.panCanvas(e.delta);
                         }
                       },
+                      onPointerSignal: (e) {
+                        if (e is PointerScrollEvent &&
+                            ref.read(isMetaIsPressedStateProvider)) {
+                          canvas.zoomCanvas(e.scrollDelta.dy > 0);
+                        }
+                      },
                       child: GestureDetector(
                         onTap: () {
                           if (activeTool != ToolCode.select) {
